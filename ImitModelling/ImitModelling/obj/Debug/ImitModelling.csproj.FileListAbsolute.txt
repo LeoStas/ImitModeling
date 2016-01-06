@@ -7,3 +7,12 @@ C:\Users\leost\ImitModeling\ImitModelling\ImitModelling\obj\Debug\ImitModelling.
 C:\Users\leost\ImitModeling\ImitModelling\ImitModelling\obj\Debug\ImitModelling.csproj.GenerateResource.Cache
 C:\Users\leost\ImitModeling\ImitModelling\ImitModelling\obj\Debug\ImitModelling.exe
 C:\Users\leost\ImitModeling\ImitModelling\ImitModelling\obj\Debug\ImitModelling.pdb
+C:\Users\leost\OneDrive\Документы\Visual Studio 2015\Projects\ImitModeling\ImitModelling\ImitModelling\bin\Debug\ImitModelling.exe.config
+C:\Users\leost\OneDrive\Документы\Visual Studio 2015\Projects\ImitModeling\ImitModelling\ImitModelling\obj\Debug\ImitModelling.exe
+C:\Users\leost\OneDrive\Документы\Visual Studio 2015\Projects\ImitModeling\ImitModelling\ImitModelling\obj\Debug\ImitModelling.pdb
+C:\Users\leost\OneDrive\Документы\Visual Studio 2015\Projects\ImitModeling\ImitModelling\ImitModelling\obj\Debug\ImitModelling.csprojResolveAssemblyReference.cache
+C:\Users\leost\OneDrive\Документы\Visual Studio 2015\Projects\ImitModeling\ImitModelling\ImitModelling\obj\Debug\ImitModelling.Form1.resources
+C:\Users\leost\OneDrive\Документы\Visual Studio 2015\Projects\ImitModeling\ImitModelling\ImitModelling\obj\Debug\ImitModelling.Properties.Resources.resources
+C:\Users\leost\OneDrive\Документы\Visual Studio 2015\Projects\ImitModeling\ImitModelling\ImitModelling\obj\Debug\ImitModelling.csproj.GenerateResource.Cache
+C:\Users\leost\OneDrive\Документы\Visual Studio 2015\Projects\ImitModeling\ImitModelling\ImitModelling\bin\Debug\ImitModelling.exe
+C:\Users\leost\OneDrive\Документы\Visual Studio 2015\Projects\ImitModeling\ImitModelling\ImitModelling\bin\Debug\ImitModelling.pdb
