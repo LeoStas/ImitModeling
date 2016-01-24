@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ImitModelling
 {
@@ -14,21 +10,21 @@ namespace ImitModelling
 		public static int r;
 		static Cell()
 		{
-			r = 6;
+			r = 5;
 		}
 		public Cell(int x, int y)
 		{
 			this.x = x;
 			this.y = y;
 		}
-		public Point fieldToPictureTransform(int xOffset, int yOffset, Graphics g)
+		public Point gridToPictureTransform(int xOffset, int yOffset)
 		{
 			Point res = new Point();
 			res.X = x * Cell.r + xOffset;
 			res.Y = y * Cell.r + yOffset;
 			return res;
 		}
-		public abstract void Draw(int pictureWidth, int pictureHeight, Graphics g);
+		public abstract void Draw(int xOffset, int yOffset, Graphics g);
 		public int X
 		{
 			get
@@ -57,11 +53,11 @@ namespace ImitModelling
 	{
 		public EmptyCell(int x, int y) : base(x, y)
 		{
-
 		}
-		public override void Draw(int pictureWidth, int pictureHeight, Graphics g)
+		public override void Draw(int xOffset, int yOffset, Graphics g)
 		{
-
+			Point p = gridToPictureTransform(xOffset, yOffset);
+			g.DrawRectangle(Pens.Black, p.X, p.Y, Cell.r, Cell.r);
 		}
 	}
 
@@ -73,9 +69,8 @@ namespace ImitModelling
 			distribution = distr;
 		}
 
-		public override void Draw(int pictureWidth, int pictureHeight, Graphics g)
+		public override void Draw(int xOffset, int yOffset, Graphics g)
 		{
-
 		}
 	}
 
@@ -83,13 +78,12 @@ namespace ImitModelling
 	{
 		public AgentCell(int x, int y) : base(x, y)
 		{
-
 		}
-		public override void Draw(int pictureWidth, int pictureHeight, Graphics g)
+		public override void Draw(int xOffset, int yOffset, Graphics g)
 		{
 			Color color = Color.Green;
-			Point p = fieldToPictureTransform(pictureWidth, pictureHeight, g);
-			g.FillEllipse(new SolidBrush(color), p.X - r / 2, p.Y - r / 2, r, r);
+			Point p = gridToPictureTransform(xOffset, yOffset);
+			g.FillEllipse(new SolidBrush(color), p.X, p.Y, r, r);
 		}
 	}
 
@@ -97,11 +91,11 @@ namespace ImitModelling
 	{
 		public ExitCell(int x, int y) : base(x, y)
 		{
-
 		}
-		public override void Draw(int pictureWidth, int pictureHeight, Graphics g)
+		public override void Draw(int xOffset, int yOffset, Graphics g)
 		{
-
+			Point p = gridToPictureTransform(xOffset, yOffset);
+			g.FillRectangle(new SolidBrush(Color.Orange), p.X, p.Y, Cell.r, Cell.r);
 		}
 	}
 
@@ -109,12 +103,25 @@ namespace ImitModelling
 	{
 		public WallCell(int x, int y) : base(x, y)
 		{
-
 		}
-		public override void Draw(int pictureWidth, int pictureHeight, Graphics g)
+		public override void Draw(int xOffset, int yOffset, Graphics g)
 		{
-			Point p = fieldToPictureTransform(pictureWidth, pictureHeight, g);
+			Point p = gridToPictureTransform(xOffset, yOffset);
 			g.FillRectangle(new SolidBrush(Color.Black), p.X, p.Y, Cell.r, Cell.r);
+			//g.DrawRectangle(Pens.Black, p.X, p.Y, Cell.r, Cell.r);
 		}
+	}
+
+	public class DebugCell : Cell
+	{
+		public DebugCell(int x, int y) : base(x, y)
+		{
+		}
+		public override void Draw(int xOffset, int yOffset, Graphics g)
+		{
+			Point p = gridToPictureTransform(xOffset, yOffset);
+			g.FillRectangle(new SolidBrush(Color.Red), p.X, p.Y, Cell.r, Cell.r);
+		}
+
 	}
 }
