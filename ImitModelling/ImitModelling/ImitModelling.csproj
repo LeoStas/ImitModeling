@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CellFactory.cs" />
     <Compile Include="Cells.cs" />
     <Compile Include="ImitationForm.cs">
       <SubType>Form</SubType>
@@ -69,6 +70,7 @@
       <DependentUpon>ImitationForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Grid.cs" />
+    <Compile Include="Painters.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ImitationForm.resx">

@@ -3,6 +3,7 @@ using System.Drawing;
 
 namespace ImitModelling
 {
+	[Serializable]
 	public abstract class Cell
 	{
 		private int x;
@@ -24,7 +25,7 @@ namespace ImitModelling
 			res.Y = y * Cell.r + yOffset;
 			return res;
 		}
-		public abstract void Draw(int xOffset, int yOffset, Graphics g);
+		public abstract void Draw(Painter painter);
 		public int X
 		{
 			get
@@ -49,19 +50,36 @@ namespace ImitModelling
 		}
 	}
 
-	public class EmptyCell : Cell
+	[Serializable]
+	public abstract class NotOccupiedCell : Cell
+	{
+		public NotOccupiedCell(int x, int y) : base(x, y)
+		{
+		}
+	}
+
+	[Serializable]
+	public abstract class OccupiedCell : Cell
+	{
+		public OccupiedCell(int x, int y) : base(x, y)
+		{
+		}
+	}
+
+	[Serializable]
+	public class EmptyCell : NotOccupiedCell
 	{
 		public EmptyCell(int x, int y) : base(x, y)
 		{
 		}
-		public override void Draw(int xOffset, int yOffset, Graphics g)
+		public override void Draw(Painter painter)
 		{
-			Point p = gridToPictureTransform(xOffset, yOffset);
-			g.DrawRectangle(Pens.Black, p.X, p.Y, Cell.r, Cell.r);
+			painter.draw(this);
 		}
 	}
 
-	public class SpawnCell : Cell
+	[Serializable]
+	public class SpawnCell : NotOccupiedCell
 	{
 		private double distribution;
 		public SpawnCell(int x, int y, double distr) : base(x, y)
@@ -69,49 +87,50 @@ namespace ImitModelling
 			distribution = distr;
 		}
 
-		public override void Draw(int xOffset, int yOffset, Graphics g)
+		public override void Draw(Painter painter)
 		{
+			painter.draw(this);
 		}
 	}
 
-	public class AgentCell : Cell
+	[Serializable]
+	public class AgentCell : OccupiedCell
 	{
 		public AgentCell(int x, int y) : base(x, y)
 		{
 		}
-		public override void Draw(int xOffset, int yOffset, Graphics g)
+		public override void Draw(Painter painter)
 		{
-			Color color = Color.Green;
-			Point p = gridToPictureTransform(xOffset, yOffset);
-			g.FillEllipse(new SolidBrush(color), p.X, p.Y, r, r);
+			painter.draw(this);
 		}
 	}
 
-	public class ExitCell : Cell
+	[Serializable]
+	public class ExitCell : NotOccupiedCell
 	{
 		public ExitCell(int x, int y) : base(x, y)
 		{
 		}
-		public override void Draw(int xOffset, int yOffset, Graphics g)
+		public override void Draw(Painter painter)
 		{
-			Point p = gridToPictureTransform(xOffset, yOffset);
-			g.FillRectangle(new SolidBrush(Color.Orange), p.X, p.Y, Cell.r, Cell.r);
+			painter.draw(this);
 		}
 	}
 
-	public class WallCell : Cell
+	[Serializable]
+	public class WallCell : OccupiedCell
 	{
 		public WallCell(int x, int y) : base(x, y)
 		{
 		}
-		public override void Draw(int xOffset, int yOffset, Graphics g)
+		public override void Draw(Painter painter)
 		{
-			Point p = gridToPictureTransform(xOffset, yOffset);
-			g.FillRectangle(new SolidBrush(Color.Black), p.X, p.Y, Cell.r, Cell.r);
-			//g.DrawRectangle(Pens.Black, p.X, p.Y, Cell.r, Cell.r);
+			painter.draw(this);
 		}
 	}
 
+	/*
+	[Serializable]
 	public class DebugCell : Cell
 	{
 		public DebugCell(int x, int y) : base(x, y)
@@ -124,4 +143,5 @@ namespace ImitModelling
 		}
 
 	}
+	*/
 }
