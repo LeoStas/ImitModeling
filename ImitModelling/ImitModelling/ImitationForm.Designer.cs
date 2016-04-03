@@ -38,12 +38,13 @@
 			this.масштабToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.увеличитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.уменьшитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.EditToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.WallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.SpawnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.ExitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.incSize = new System.Windows.Forms.Button();
 			this.decSize = new System.Windows.Forms.Button();
 			this.timerMove = new System.Windows.Forms.Timer(this.components);
-			this.wallRadio = new System.Windows.Forms.RadioButton();
-			this.spawnRadio = new System.Windows.Forms.RadioButton();
-			this.exitRadio = new System.Windows.Forms.RadioButton();
 			this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
 			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
 			this.panel1 = new System.Windows.Forms.Panel();
@@ -71,7 +72,8 @@
 			// 
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.файлToolStripMenuItem,
-            this.масштабToolStripMenuItem});
+            this.масштабToolStripMenuItem,
+            this.EditToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Size = new System.Drawing.Size(501, 24);
@@ -132,11 +134,45 @@
 			this.уменьшитьToolStripMenuItem.Text = "Уменьшить (–)";
 			this.уменьшитьToolStripMenuItem.Click += new System.EventHandler(this.decSize_Click);
 			// 
+			// EditToolStripMenuItem
+			// 
+			this.EditToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.WallToolStripMenuItem,
+            this.SpawnToolStripMenuItem,
+            this.ExitToolStripMenuItem});
+			this.EditToolStripMenuItem.Name = "EditToolStripMenuItem";
+			this.EditToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
+			this.EditToolStripMenuItem.Text = "Правка";
+			// 
+			// WallToolStripMenuItem
+			// 
+			this.WallToolStripMenuItem.Enabled = false;
+			this.WallToolStripMenuItem.Name = "WallToolStripMenuItem";
+			this.WallToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+			this.WallToolStripMenuItem.Text = "Стена";
+			this.WallToolStripMenuItem.Click += new System.EventHandler(this.WallToolStripMenuItem_Click);
+			// 
+			// SpawnToolStripMenuItem
+			// 
+			this.SpawnToolStripMenuItem.Enabled = false;
+			this.SpawnToolStripMenuItem.Name = "SpawnToolStripMenuItem";
+			this.SpawnToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+			this.SpawnToolStripMenuItem.Text = "Спаун";
+			this.SpawnToolStripMenuItem.Click += new System.EventHandler(this.SpawnToolStripMenuItem_Click);
+			// 
+			// ExitToolStripMenuItem
+			// 
+			this.ExitToolStripMenuItem.Enabled = false;
+			this.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem";
+			this.ExitToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+			this.ExitToolStripMenuItem.Text = "Выход";
+			this.ExitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
+			// 
 			// incSize
 			// 
 			this.incSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.incSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.incSize.Location = new System.Drawing.Point(12, 338);
+			this.incSize.Location = new System.Drawing.Point(435, 338);
 			this.incSize.Name = "incSize";
 			this.incSize.Size = new System.Drawing.Size(23, 23);
 			this.incSize.TabIndex = 2;
@@ -148,7 +184,7 @@
 			// 
 			this.decSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.decSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.decSize.Location = new System.Drawing.Point(41, 338);
+			this.decSize.Location = new System.Drawing.Point(464, 338);
 			this.decSize.Name = "decSize";
 			this.decSize.Size = new System.Drawing.Size(25, 23);
 			this.decSize.TabIndex = 3;
@@ -160,44 +196,6 @@
 			// 
 			this.timerMove.Interval = 5;
 			this.timerMove.Tick += new System.EventHandler(this.timerMove_Tick);
-			// 
-			// wallRadio
-			// 
-			this.wallRadio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.wallRadio.AutoSize = true;
-			this.wallRadio.Location = new System.Drawing.Point(96, 341);
-			this.wallRadio.Name = "wallRadio";
-			this.wallRadio.Size = new System.Drawing.Size(55, 17);
-			this.wallRadio.TabIndex = 4;
-			this.wallRadio.Text = "Стена";
-			this.wallRadio.UseVisualStyleBackColor = true;
-			this.wallRadio.CheckedChanged += new System.EventHandler(this.wallRadio_CheckedChanged);
-			// 
-			// spawnRadio
-			// 
-			this.spawnRadio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.spawnRadio.AutoSize = true;
-			this.spawnRadio.Location = new System.Drawing.Point(96, 365);
-			this.spawnRadio.Name = "spawnRadio";
-			this.spawnRadio.Size = new System.Drawing.Size(55, 17);
-			this.spawnRadio.TabIndex = 5;
-			this.spawnRadio.TabStop = true;
-			this.spawnRadio.Text = "Спаун";
-			this.spawnRadio.UseVisualStyleBackColor = true;
-			this.spawnRadio.CheckedChanged += new System.EventHandler(this.spawnRadio_CheckedChanged);
-			// 
-			// exitRadio
-			// 
-			this.exitRadio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.exitRadio.AutoSize = true;
-			this.exitRadio.Location = new System.Drawing.Point(96, 389);
-			this.exitRadio.Name = "exitRadio";
-			this.exitRadio.Size = new System.Drawing.Size(57, 17);
-			this.exitRadio.TabIndex = 6;
-			this.exitRadio.TabStop = true;
-			this.exitRadio.Text = "Выход";
-			this.exitRadio.UseVisualStyleBackColor = true;
-			this.exitRadio.CheckedChanged += new System.EventHandler(this.exitRadio_CheckedChanged);
 			// 
 			// openFileDialog1
 			// 
@@ -221,9 +219,6 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(501, 467);
 			this.Controls.Add(this.panel1);
-			this.Controls.Add(this.exitRadio);
-			this.Controls.Add(this.spawnRadio);
-			this.Controls.Add(this.wallRadio);
 			this.Controls.Add(this.decSize);
 			this.Controls.Add(this.incSize);
 			this.Controls.Add(this.menuStrip1);
@@ -254,13 +249,14 @@
 		private System.Windows.Forms.ToolStripMenuItem уменьшитьToolStripMenuItem;
 		private System.Windows.Forms.Timer timerMove;
 		private System.Windows.Forms.ToolStripMenuItem createToolStripMenuItem;
-		private System.Windows.Forms.RadioButton wallRadio;
-		private System.Windows.Forms.RadioButton spawnRadio;
-		private System.Windows.Forms.RadioButton exitRadio;
 		private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
 		private System.Windows.Forms.SaveFileDialog saveFileDialog1;
 		private System.Windows.Forms.OpenFileDialog openFileDialog1;
 		private System.Windows.Forms.Panel panel1;
+		private System.Windows.Forms.ToolStripMenuItem EditToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem WallToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem SpawnToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem ExitToolStripMenuItem;
 	}
 }
 

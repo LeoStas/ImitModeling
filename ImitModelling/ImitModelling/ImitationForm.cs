@@ -91,7 +91,9 @@ namespace ImitModelling
         {
 			CreatePainter cptr = new CreatePainter(xOffset(), yOffset(), e.Graphics);
 			prj.grid.Draw(cptr);
-        }
+			Size size = new Size(prj.grid.Width() * Cell.r, prj.grid.Height() * Cell.r);
+			panel1.AutoScrollMinSize = size;
+		}
 
         private void Form1_SizeChanged(object sender, EventArgs e)
         {
@@ -133,33 +135,11 @@ namespace ImitModelling
 		{
 			this.pictureBox1.Show();
 			prj.grid = new Grid();
-			prj.grid.createEmptyGrid(this.pictureBox1.Width / Cell.r, this.pictureBox1.Height / Cell.r);
+			prj.grid.createEmptyGrid(this.panel1.Width / Cell.r, this.panel1.Height / Cell.r);
 			this.pictureBox1.MouseDown += pictureBox1_MouseDown;
 			this.pictureBox1.MouseMove += pictureBox1_MouseMove;
 			this.pictureBox1.MouseUp += pictureBox1_MouseUp;
 			this.pictureBox1.Invalidate();
-		}
-
-		private void wallRadio_CheckedChanged(object sender, EventArgs e)
-		{
-			if (this.wallRadio.Checked) {
-				factory = new WallFactory();
-			}
-		}
-
-		private void spawnRadio_CheckedChanged(object sender, EventArgs e)
-		{
-			if (this.spawnRadio.Checked) {
-				factory = new SpawnFactory();
-			}
-
-		}
-
-		private void exitRadio_CheckedChanged(object sender, EventArgs e)
-		{
-			if (this.exitRadio.Checked) {
-				factory = new ExitFactory();
-			}
 		}
 
 		private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
@@ -210,6 +190,21 @@ namespace ImitModelling
 			if (this.saveFileDialog1.ShowDialog() == DialogResult.OK) {
 				SaveState(this.saveFileDialog1.FileName);
 			}
+		}
+
+		private void WallToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			factory = new WallFactory();
+		}
+
+		private void SpawnToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			factory = new SpawnFactory();
+		}
+
+		private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			factory = new ExitFactory();
 		}
 	}    
 }
