@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Drawing;
-using System.Collections.Generic;
-using System.Threading;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -17,7 +15,6 @@ namespace ImitModelling
 			public Grid grid;
 		}
 		static int NUM;
-		private Thread thread;
 		private CellFactory factory;
 		private bool isDown;
 		private Project prj;
@@ -135,7 +132,11 @@ namespace ImitModelling
 		{
 			this.pictureBox1.Show();
 			prj.grid = new Grid();
-			prj.grid.createEmptyGrid(this.panel1.Width / Cell.r, this.panel1.Height / Cell.r);
+			prj.grid.createEmptyGrid(this.panel1.Height / Cell.r, this.panel1.Width / Cell.r);
+			this.WallToolStripMenuItem.Enabled = true;
+			this.SpawnToolStripMenuItem.Enabled = true;
+			this.ExitToolStripMenuItem.Enabled = true;
+			this.CheckpointToolStripMenuItem.Enabled = true;
 			this.pictureBox1.MouseDown += pictureBox1_MouseDown;
 			this.pictureBox1.MouseMove += pictureBox1_MouseMove;
 			this.pictureBox1.MouseUp += pictureBox1_MouseUp;
@@ -194,17 +195,46 @@ namespace ImitModelling
 
 		private void WallToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			foreach (ToolStripMenuItem tsmi in this.EditToolStripMenuItem.DropDownItems) {
+				tsmi.Checked = false;
+			}
+			this.WallToolStripMenuItem.Checked = true;
+			this.menuStrip1.Invalidate();
 			factory = new WallFactory();
 		}
 
 		private void SpawnToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			foreach (ToolStripMenuItem tsmi in this.EditToolStripMenuItem.DropDownItems) {
+				tsmi.Checked = false;
+			}
+			this.SpawnToolStripMenuItem.Checked = true;
 			factory = new SpawnFactory();
 		}
 
 		private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			foreach (ToolStripMenuItem tsmi in this.EditToolStripMenuItem.DropDownItems) {
+				tsmi.Checked = false;
+			}
+			this.ExitToolStripMenuItem.Checked = true;
 			factory = new ExitFactory();
+		}
+
+		private void CheckpointToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			foreach (ToolStripMenuItem tsmi in this.EditToolStripMenuItem.DropDownItems) {
+				tsmi.Checked = false;
+			}
+			this.CheckpointToolStripMenuItem.Checked = true;
+			factory = new CheckpointFactory();
+		}
+
+		private void FinishEditToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (prj.grid == null) return;
+			prj.grid.CutGrid();
+			this.pictureBox1.Invalidate();
 		}
 	}    
 }

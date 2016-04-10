@@ -19,6 +19,7 @@ namespace ImitModelling
 		public abstract void draw(SpawnCell cell);
 		public abstract void draw(AgentCell cell);
 		public abstract void draw(WallCell cell);
+		public abstract void draw(CheckpointCell cell);
 	}
 
 	public class WorkPainter : Painter
@@ -52,6 +53,11 @@ namespace ImitModelling
 		{
 			Point p = cell.gridToPictureTransform(xOffset, yOffset);
 			g.FillRectangle(new SolidBrush(Color.Black), p.X, p.Y, Cell.r, Cell.r);
+		}
+		public override void draw(CheckpointCell cell)
+		{
+			Point p = cell.gridToPictureTransform(xOffset, yOffset);
+			g.DrawRectangle(Pens.Black, p.X, p.Y, Cell.r, Cell.r);
 		}
 	}
 
@@ -87,6 +93,11 @@ namespace ImitModelling
 		{
 			Point p = cell.gridToPictureTransform(xOffset, yOffset);
 			g.FillRectangle(new SolidBrush(Color.Black), p.X, p.Y, Cell.r, Cell.r);
+		}
+		public override void draw(CheckpointCell cell)
+		{
+			Point p = cell.gridToPictureTransform(xOffset, yOffset);
+			g.FillRectangle(new SolidBrush(Color.Red), p.X, p.Y, Cell.r, Cell.r);
 		}
 	}
 }

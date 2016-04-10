@@ -42,12 +42,14 @@
 			this.WallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.SpawnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.ExitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.CheckpointToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.incSize = new System.Windows.Forms.Button();
 			this.decSize = new System.Windows.Forms.Button();
 			this.timerMove = new System.Windows.Forms.Timer(this.components);
 			this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
 			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
 			this.panel1 = new System.Windows.Forms.Panel();
+			this.FinishEditToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.menuStrip1.SuspendLayout();
 			this.panel1.SuspendLayout();
@@ -59,7 +61,7 @@
 			this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.pictureBox1.Location = new System.Drawing.Point(0, 0);
 			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(476, 304);
+			this.pictureBox1.Size = new System.Drawing.Size(476, 398);
 			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
 			this.pictureBox1.TabIndex = 0;
 			this.pictureBox1.TabStop = false;
@@ -85,7 +87,8 @@
 			this.файлToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.createToolStripMenuItem,
             this.saveToolStripMenuItem,
-            this.LoadToolStripMenuItem});
+            this.LoadToolStripMenuItem,
+            this.FinishEditToolStripMenuItem});
 			this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
 			this.файлToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
 			this.файлToolStripMenuItem.Text = "Файл";
@@ -93,21 +96,21 @@
 			// createToolStripMenuItem
 			// 
 			this.createToolStripMenuItem.Name = "createToolStripMenuItem";
-			this.createToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+			this.createToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
 			this.createToolStripMenuItem.Text = "Создать";
 			this.createToolStripMenuItem.Click += new System.EventHandler(this.createToolStripMenuItem_Click);
 			// 
 			// saveToolStripMenuItem
 			// 
 			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-			this.saveToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+			this.saveToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
 			this.saveToolStripMenuItem.Text = "Сохранить";
 			this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
 			// 
 			// LoadToolStripMenuItem
 			// 
 			this.LoadToolStripMenuItem.Name = "LoadToolStripMenuItem";
-			this.LoadToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+			this.LoadToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
 			this.LoadToolStripMenuItem.Text = "Загрузить";
 			this.LoadToolStripMenuItem.Click += new System.EventHandler(this.LoadToolStripMenuItem_Click);
 			// 
@@ -139,7 +142,8 @@
 			this.EditToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.WallToolStripMenuItem,
             this.SpawnToolStripMenuItem,
-            this.ExitToolStripMenuItem});
+            this.ExitToolStripMenuItem,
+            this.CheckpointToolStripMenuItem});
 			this.EditToolStripMenuItem.Name = "EditToolStripMenuItem";
 			this.EditToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
 			this.EditToolStripMenuItem.Text = "Правка";
@@ -148,7 +152,7 @@
 			// 
 			this.WallToolStripMenuItem.Enabled = false;
 			this.WallToolStripMenuItem.Name = "WallToolStripMenuItem";
-			this.WallToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+			this.WallToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
 			this.WallToolStripMenuItem.Text = "Стена";
 			this.WallToolStripMenuItem.Click += new System.EventHandler(this.WallToolStripMenuItem_Click);
 			// 
@@ -156,7 +160,7 @@
 			// 
 			this.SpawnToolStripMenuItem.Enabled = false;
 			this.SpawnToolStripMenuItem.Name = "SpawnToolStripMenuItem";
-			this.SpawnToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+			this.SpawnToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
 			this.SpawnToolStripMenuItem.Text = "Спаун";
 			this.SpawnToolStripMenuItem.Click += new System.EventHandler(this.SpawnToolStripMenuItem_Click);
 			// 
@@ -164,15 +168,23 @@
 			// 
 			this.ExitToolStripMenuItem.Enabled = false;
 			this.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem";
-			this.ExitToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+			this.ExitToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
 			this.ExitToolStripMenuItem.Text = "Выход";
 			this.ExitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
 			// 
+			// CheckpointToolStripMenuItem
+			// 
+			this.CheckpointToolStripMenuItem.Enabled = false;
+			this.CheckpointToolStripMenuItem.Name = "CheckpointToolStripMenuItem";
+			this.CheckpointToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+			this.CheckpointToolStripMenuItem.Text = "Чекпойнт";
+			this.CheckpointToolStripMenuItem.Click += new System.EventHandler(this.CheckpointToolStripMenuItem_Click);
+			// 
 			// incSize
 			// 
-			this.incSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.incSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.incSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.incSize.Location = new System.Drawing.Point(435, 338);
+			this.incSize.Location = new System.Drawing.Point(434, 432);
 			this.incSize.Name = "incSize";
 			this.incSize.Size = new System.Drawing.Size(23, 23);
 			this.incSize.TabIndex = 2;
@@ -182,9 +194,9 @@
 			// 
 			// decSize
 			// 
-			this.decSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.decSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.decSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.decSize.Location = new System.Drawing.Point(464, 338);
+			this.decSize.Location = new System.Drawing.Point(463, 432);
 			this.decSize.Name = "decSize";
 			this.decSize.Size = new System.Drawing.Size(25, 23);
 			this.decSize.TabIndex = 3;
@@ -210,8 +222,15 @@
 			this.panel1.Controls.Add(this.pictureBox1);
 			this.panel1.Location = new System.Drawing.Point(13, 28);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(476, 304);
+			this.panel1.Size = new System.Drawing.Size(476, 398);
 			this.panel1.TabIndex = 7;
+			// 
+			// FinishEditToolStripMenuItem
+			// 
+			this.FinishEditToolStripMenuItem.Name = "FinishEditToolStripMenuItem";
+			this.FinishEditToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+			this.FinishEditToolStripMenuItem.Text = "Закончить редактирование";
+			this.FinishEditToolStripMenuItem.Click += new System.EventHandler(this.FinishEditToolStripMenuItem_Click);
 			// 
 			// ImitationForm
 			// 
@@ -257,6 +276,8 @@
 		private System.Windows.Forms.ToolStripMenuItem WallToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem SpawnToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem ExitToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem CheckpointToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem FinishEditToolStripMenuItem;
 	}
 }
 

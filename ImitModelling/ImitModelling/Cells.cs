@@ -129,6 +129,19 @@ namespace ImitModelling
 		}
 	}
 
+	[Serializable]
+	public class CheckpointCell : NotOccupiedCell
+	{
+		public CheckpointCell(int x, int y) : base (x, y)
+		{
+		}
+		public override void Draw(Painter painter)
+		{
+			painter.draw(this);
+		}
+
+	}
+
 	/*
 	[Serializable]
 	public class DebugCell : Cell

@@ -39,4 +39,12 @@ namespace ImitModelling
 		}
 	}
 
+	public class CheckpointFactory : CellFactory
+	{
+		public override Cell createCell(int x, int y)
+		{
+			return new CheckpointCell(x, y);
+		}
+	}
+
 }

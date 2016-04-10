@@ -24,12 +24,50 @@ namespace ImitModelling
 
 		public int Width()
 		{
-			return grid.GetLength(0);
+			return grid.GetLength(1);
 		}
 
 		public int Height()
 		{
-			return grid.GetLength(1);
+			return grid.GetLength(0);
+		}
+
+		public void CutGrid()
+		{
+			int xStart = Width() - 1, xEnd = 0;
+			int yStart = Height() - 1, yEnd = 0;
+			for (int i = 0; i < Height(); ++i) {
+				for (int j = 0; j < Width(); ++j) {
+					if (!(grid[i, j] is EmptyCell)) {
+						if (xEnd < j) {
+							xEnd = j;
+						}
+						if (xStart > j) {
+							xStart = j;
+						}
+						if (yEnd < i) {
+							yEnd = i;
+						}
+						if (yStart > i) {
+							yStart = i;
+						}
+					} 
+				}
+			}
+			int cutW = xEnd - xStart + 1;
+			int cutH = yEnd - yStart + 1;
+			if (cutH <= 0 || cutW <= 0) {
+				return;
+			}
+			Cell[,] cutGrid = new Cell[cutH, cutW];
+			for (int i = 0; i < cutH; ++i) {
+				for (int j = 0; j < cutW; ++j) {
+					cutGrid[i, j] = grid[yStart + i, xStart + j];
+					cutGrid[i, j].X = j;
+					cutGrid[i, j].Y = i;
+				}
+			}
+			grid = cutGrid;
 		}
 
 		public void createEmptyGrid(int n, int m)
@@ -37,7 +75,7 @@ namespace ImitModelling
 			grid = new Cell[n, m];
 			for (int i = 0; i < n; ++i) {
 				for (int j = 0; j < m; ++j) {
-					grid[i, j] = new EmptyCell(i, j);
+					grid[i, j] = new EmptyCell(j, i);
 				}
 			}
 		}
@@ -74,20 +112,20 @@ namespace ImitModelling
 			}
 		}
 
-		public bool setCell(int i, int j, Cell cell)
+		public bool setCell(int x, int y, Cell cell)
 		{
-			if (i < 0 || i >= grid.GetLength(0) || j < 0 || j >= grid.GetLength(1)) {
+			if (y < 0 || y >= Height() || x < 0 || x >= Width()) {
 				return false;
 			}
-			grid[i, j] = cell;
+			grid[y, x] = cell;
 			return true;
 		}
 
 		public void Draw(Painter painter)
 		{
 			if (grid == null) return;
-			for (int i = 0; i < grid.GetLength(0); ++i) {
-				for (int j = 0; j < grid.GetLength(1); ++j) {
+			for (int i = 0; i < Height(); ++i) {
+				for (int j = 0; j < Width(); ++j) {
 					grid[i, j].Draw(painter);
 				}
 			}
@@ -95,8 +133,8 @@ namespace ImitModelling
 
 		public Cell findCellPictureCoords(Point picturePoint, int xOffset, int yOffset)
 		{
-			for (int i = 0; i < grid.GetLength(0); ++i) {
-				for (int j = 0; j < grid.GetLength(1); ++j) {
+			for (int i = 0; i < Height(); ++i) {
+				for (int j = 0; j < Width(); ++j) {
 					Point coord = grid[i, j].gridToPictureTransform(xOffset, yOffset);
 					if (picturePoint.X <= coord.X + Cell.r && picturePoint.X >= coord.X &&
 							picturePoint.Y >= coord.Y && picturePoint.Y <= coord.Y + Cell.r) {
