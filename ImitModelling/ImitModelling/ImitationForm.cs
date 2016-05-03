@@ -3,16 +3,18 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Reflection;
+using System.ComponentModel;
 
 namespace ImitModelling
 {
-	[Serializable]
 	public partial class ImitationForm : Form
     {
 		[Serializable]
 		class Project
 		{
 			public Grid grid;
+			public ProgramState state;
 		}
 		static int NUM;
 		private CellFactory factory;
@@ -27,15 +29,18 @@ namespace ImitModelling
         {
 			prj = new Project();
             prj.grid = new Grid();
+			prj.state = new ProgramState();
+			//prj.state = new EditAllCellsState(this);
+			prj.state.LoadState(this);
 			isDown = false;
 			factory = new EmptyFactory();
             InitializeComponent();
-			this.pictureBox1.Hide();
+			this.pictureBox.Hide();
 		}
 
 		public void SaveState(string filename)
 		{
-			BinaryFormatter bf = new BinaryFormatter();
+			var bf = new BinaryFormatter();
 			FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write);
 			bf.Serialize(fs, prj);
 			bf.Serialize(fs, Cell.r);
@@ -47,6 +52,8 @@ namespace ImitModelling
 			BinaryFormatter bf = new BinaryFormatter();
 			FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
 			prj = (Project)bf.Deserialize(fs);
+			prj.state.Reload(this);
+			prj.state.LoadState(this);
 			Cell.r = (int)bf.Deserialize(fs);
 			fs.Close();
 		}
@@ -55,8 +62,9 @@ namespace ImitModelling
         {
 			if (this.openFileDialog1.ShowDialog() == DialogResult.OK) {
 				LoadState(this.openFileDialog1.FileName);
-				this.pictureBox1.Show();
-				this.pictureBox1.Invalidate();
+				prj.state.LoadState(this);
+				this.pictureBox.Show();
+				this.pictureBox.Invalidate();
 			}
 			/*
             OpenFileDialog ofd = new OpenFileDialog();
@@ -71,22 +79,22 @@ namespace ImitModelling
 			thread = new Thread(prj.grid.fillFull);
 			*/
 			//thread.Start();
-			this.pictureBox1.Invalidate();
+			//this.pictureBox.Invalidate();
         }
 
 		private int xOffset()
 		{
-			return Math.Max((pictureBox1.Width - prj.grid.Width() * Cell.r) / 2, 0);
+			return Math.Max((pictureBox.Width - prj.grid.Width() * Cell.r) / 2, 0);
 		}
 
 		private int yOffset()
 		{
-			return Math.Max((pictureBox1.Height - prj.grid.Height() * Cell.r) / 2, 0);
+			return Math.Max((pictureBox.Height - prj.grid.Height() * Cell.r) / 2, 0);
 		}
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
-			CreatePainter cptr = new CreatePainter(xOffset(), yOffset(), e.Graphics);
+			CreatePainter cptr = new CreatePainter(xOffset(), yOffset(), e.Graphics, prj.grid);
 			prj.grid.Draw(cptr);
 			Size size = new Size(prj.grid.Width() * Cell.r, prj.grid.Height() * Cell.r);
 			panel1.AutoScrollMinSize = size;
@@ -94,14 +102,14 @@ namespace ImitModelling
 
         private void Form1_SizeChanged(object sender, EventArgs e)
         {
-            this.pictureBox1.Invalidate();
+            this.pictureBox.Invalidate();
         }
 
 		private void incSize_Click(object sender, EventArgs e)
 		{
 			if (prj.grid == null) return;
 			++Cell.r;
-			this.pictureBox1.Invalidate();
+			this.pictureBox.Invalidate();
 		}
 
 		private void decSize_Click(object sender, EventArgs e)
@@ -109,7 +117,7 @@ namespace ImitModelling
 			if (prj.grid == null) return;
 			if (Cell.r > 1) {
 				--Cell.r;
-				this.pictureBox1.Invalidate();
+				this.pictureBox.Invalidate();
 			}
 		}
 
@@ -121,29 +129,48 @@ namespace ImitModelling
 		private void timerMove_Tick(object sender, EventArgs e)
 		{
 			if (NUM > 0) {
-				prj.grid.generateAgents();
+				//prj.grid.generateAgents();
 				NUM--;
 			}
-			prj.grid.makeMove();
-			this.pictureBox1.Invalidate();
+			//prj.grid.makeMove();
+			this.pictureBox.Invalidate();
 		}
 
 		private void createToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			this.pictureBox1.Show();
+			this.pictureBox.Show();
 			prj.grid = new Grid();
 			prj.grid.createEmptyGrid(this.panel1.Height / Cell.r, this.panel1.Width / Cell.r);
-			this.WallToolStripMenuItem.Enabled = true;
-			this.SpawnToolStripMenuItem.Enabled = true;
-			this.ExitToolStripMenuItem.Enabled = true;
-			this.CheckpointToolStripMenuItem.Enabled = true;
-			this.pictureBox1.MouseDown += pictureBox1_MouseDown;
-			this.pictureBox1.MouseMove += pictureBox1_MouseMove;
-			this.pictureBox1.MouseUp += pictureBox1_MouseUp;
-			this.pictureBox1.Invalidate();
+			prj.state = new EditAllCellsState(this);
+			prj.state.LoadState(this);
+			this.pictureBox.Invalidate();
 		}
 
-		private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
+		public void LoadMenuEdit(bool [] enabled)
+		{
+			if (enabled == null) return;
+			int i = 0;
+			foreach (ToolStripMenuItem tsmi in this.EditToolStripMenuItem.DropDownItems) {
+				tsmi.Checked = false;
+				tsmi.Enabled = enabled[i];
+			}
+		}
+
+		public void LoadMouseHandlers(MouseEventHandler[] evHandlers)
+		{
+			if (evHandlers == null) return;
+			this.pictureBox.MouseDown -= EditAll_PictureBox_MouseDown;
+			this.pictureBox.MouseDown -= EditSpawn_PictureBox_MouseDown;
+			this.pictureBox.MouseMove -= EditAll_PictureBox_MouseMove;
+			this.pictureBox.MouseMove -= EditSpawn_PictureBox_MouseMove;
+			this.pictureBox.MouseUp -= EditAll_PictureBox_MouseUp;
+			this.pictureBox.MouseUp -= EditSpawn_PictureBox_MouseUp;
+			this.pictureBox.MouseDown += evHandlers[(int)ProgramState.MouseHandlersNames.MouseDownName];
+			this.pictureBox.MouseMove += evHandlers[(int)ProgramState.MouseHandlersNames.MouseMoveName];
+			this.pictureBox.MouseUp += evHandlers[(int)ProgramState.MouseHandlersNames.MouseUpName];
+		}
+
+		public void EditAll_PictureBox_MouseDown(object sender, MouseEventArgs e)
 		{
 			if (prj.grid == null) return;
 			Cell chosen = prj.grid.findCellPictureCoords(new Point(e.X, e.Y), xOffset(), yOffset());
@@ -159,10 +186,10 @@ namespace ImitModelling
 				}
 			}
 			isDown = true;
-			this.pictureBox1.Invalidate();
+			this.pictureBox.Invalidate();
 		}
 
-		private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
+		public void EditAll_PictureBox_MouseMove(object sender, MouseEventArgs e)
 		{
 			if (isDown && prj.grid != null) {
 				Cell chosen = prj.grid.findCellPictureCoords(new Point(e.X, e.Y), xOffset(), yOffset());
@@ -178,12 +205,57 @@ namespace ImitModelling
 					}
 				}
 			}
-			this.pictureBox1.Invalidate();
+			this.pictureBox.Invalidate();
 		}
 
-		private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
+		public void EditAll_PictureBox_MouseUp(object sender, MouseEventArgs e)
 		{
 			isDown = false;
+		}
+
+		public void EditSpawn_PictureBox_MouseDown(object sender, MouseEventArgs e)
+		{
+
+		}
+
+		public void EditSpawn_PictureBox_MouseMove(object sender, MouseEventArgs e)
+		{
+
+		}
+
+		public void EditSpawn_PictureBox_MouseUp(object sender, MouseEventArgs e)
+		{
+			if (prj.grid == null) return;
+			Cell chosen = prj.grid.findCellPictureCoords(new Point(e.X, e.Y), xOffset(), yOffset());
+			if (chosen != null) {
+				if (e.Button == MouseButtons.Left) {
+					if (chosen is SpawnCell) {
+						prj.grid.savedSpawn = chosen as SpawnCell;
+					}
+					if (chosen is EmptyCell && prj.grid.savedSpawn != null) {
+						CheckpointCell toSet = new CheckpointCell(chosen.X, chosen.Y);
+						prj.grid.savedSpawn.checkPoints.Add(new Tuple<int, int>(chosen.X, chosen.Y));
+						prj.grid.setCell(chosen.X, chosen.Y, toSet);
+					} else if (chosen is CheckpointCell && prj.grid.savedSpawn != null) {
+						var coords = new Tuple<int, int>(chosen.X, chosen.Y);
+						if (!prj.grid.savedSpawn.checkPoints.Contains(coords)) {
+							prj.grid.savedSpawn.checkPoints.Add(coords);
+						}
+					}
+				} else if (e.Button == MouseButtons.Right) {
+					if (chosen is SpawnCell) {
+
+					} else if (chosen is CheckpointCell) {
+						foreach (Tuple<int, int> spawnCoord in prj.grid.spawnCells) {
+							SpawnCell spawn = (prj.grid.getCell(spawnCoord) as SpawnCell);
+							spawn.checkPoints.Remove(new Tuple<int, int>(chosen.X, chosen.Y));
+						}
+						prj.grid.setCell(chosen.X, chosen.Y, new EmptyCell(chosen.X, chosen.Y));
+					}
+				}
+			}
+			isDown = true;
+			this.pictureBox.Invalidate();
 		}
 
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -234,7 +306,9 @@ namespace ImitModelling
 		{
 			if (prj.grid == null) return;
 			prj.grid.CutGrid();
-			this.pictureBox1.Invalidate();
+			prj.state = new EditSpawnsState(this);
+			prj.state.LoadState(this);
+			this.pictureBox.Invalidate();
 		}
 	}    
 }

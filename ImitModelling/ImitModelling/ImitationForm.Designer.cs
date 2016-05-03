@@ -29,12 +29,13 @@
         private void InitializeComponent()
         {
 			this.components = new System.ComponentModel.Container();
-			this.pictureBox1 = new System.Windows.Forms.PictureBox();
+			this.pictureBox = new System.Windows.Forms.PictureBox();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.createToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.LoadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.FinishEditToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.масштабToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.увеличитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.уменьшитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,26 +50,25 @@
 			this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
 			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
 			this.panel1 = new System.Windows.Forms.Panel();
-			this.FinishEditToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
 			this.menuStrip1.SuspendLayout();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// pictureBox1
+			// pictureBox
 			// 
-			this.pictureBox1.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-			this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.pictureBox1.Location = new System.Drawing.Point(0, 0);
-			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(476, 398);
-			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-			this.pictureBox1.TabIndex = 0;
-			this.pictureBox1.TabStop = false;
-			this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
-			this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
-			this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
-			this.pictureBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
+			this.pictureBox.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+			this.pictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.pictureBox.Location = new System.Drawing.Point(0, 0);
+			this.pictureBox.Name = "pictureBox";
+			this.pictureBox.Size = new System.Drawing.Size(476, 398);
+			this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+			this.pictureBox.TabIndex = 0;
+			this.pictureBox.TabStop = false;
+			this.pictureBox.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
+			this.pictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
+			this.pictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
+			this.pictureBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
 			// 
 			// menuStrip1
 			// 
@@ -113,6 +113,13 @@
 			this.LoadToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
 			this.LoadToolStripMenuItem.Text = "Загрузить";
 			this.LoadToolStripMenuItem.Click += new System.EventHandler(this.LoadToolStripMenuItem_Click);
+			// 
+			// FinishEditToolStripMenuItem
+			// 
+			this.FinishEditToolStripMenuItem.Name = "FinishEditToolStripMenuItem";
+			this.FinishEditToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+			this.FinishEditToolStripMenuItem.Text = "Закончить редактирование";
+			this.FinishEditToolStripMenuItem.Click += new System.EventHandler(this.FinishEditToolStripMenuItem_Click);
 			// 
 			// масштабToolStripMenuItem
 			// 
@@ -219,18 +226,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.panel1.AutoScroll = true;
-			this.panel1.Controls.Add(this.pictureBox1);
+			this.panel1.Controls.Add(this.pictureBox);
 			this.panel1.Location = new System.Drawing.Point(13, 28);
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(476, 398);
 			this.panel1.TabIndex = 7;
-			// 
-			// FinishEditToolStripMenuItem
-			// 
-			this.FinishEditToolStripMenuItem.Name = "FinishEditToolStripMenuItem";
-			this.FinishEditToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
-			this.FinishEditToolStripMenuItem.Text = "Закончить редактирование";
-			this.FinishEditToolStripMenuItem.Click += new System.EventHandler(this.FinishEditToolStripMenuItem_Click);
 			// 
 			// ImitationForm
 			// 
@@ -245,7 +245,7 @@
 			this.Name = "ImitationForm";
 			this.Text = "Imitation";
 			this.SizeChanged += new System.EventHandler(this.Form1_SizeChanged);
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
 			this.panel1.ResumeLayout(false);
@@ -257,7 +257,7 @@
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem файлToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem LoadToolStripMenuItem;

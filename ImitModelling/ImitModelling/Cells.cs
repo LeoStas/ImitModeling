@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace ImitModelling
@@ -82,9 +83,11 @@ namespace ImitModelling
 	public class SpawnCell : NotOccupiedCell
 	{
 		private double distribution;
+		public List<Tuple<int, int>> checkPoints;
 		public SpawnCell(int x, int y, double distr) : base(x, y)
 		{
 			distribution = distr;
+			checkPoints = new List<Tuple<int, int>>();
 		}
 
 		public override void Draw(Painter painter)
