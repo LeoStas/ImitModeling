@@ -11,7 +11,6 @@ namespace ImitModelling
 			WallItemName,
 			SpawnItemName,
 			ExitItemName,
-			CheckPointItemName,
 			Size
 		}
 		public enum MouseHandlersNames
@@ -51,7 +50,6 @@ namespace ImitModelling
 			MenuStates[(int)MenuItemsNames.WallItemName] = true;
 			MenuStates[(int)MenuItemsNames.SpawnItemName] = true;
 			MenuStates[(int)MenuItemsNames.ExitItemName] = true;
-			MenuStates[(int)MenuItemsNames.CheckPointItemName] = false;
 			MouseHandlers = new MouseEventHandler[(int)MouseHandlersNames.Size];
 			MouseHandlers[(int)MouseHandlersNames.MouseDownName] = form.EditAll_PictureBox_MouseDown;
 			MouseHandlers[(int)MouseHandlersNames.MouseMoveName] = form.EditAll_PictureBox_MouseMove;
@@ -72,11 +70,11 @@ namespace ImitModelling
 			MenuStates[(int)MenuItemsNames.WallItemName] = false;
 			MenuStates[(int)MenuItemsNames.SpawnItemName] = false;
 			MenuStates[(int)MenuItemsNames.ExitItemName] = false;
-			MenuStates[(int)MenuItemsNames.CheckPointItemName] = false;
 			MouseHandlers = new MouseEventHandler[(int)MouseHandlersNames.Size];
 			MouseHandlers[(int)MouseHandlersNames.MouseDownName] = form.EditSpawn_PictureBox_MouseDown;
 			MouseHandlers[(int)MouseHandlersNames.MouseMoveName] = form.EditSpawn_PictureBox_MouseMove;
 			MouseHandlers[(int)MouseHandlersNames.MouseUpName] = form.EditSpawn_PictureBox_MouseUp;
+			form.setTotalEnabled(true);
 		}
 	}
 
@@ -93,11 +91,11 @@ namespace ImitModelling
 			MenuStates[(int)MenuItemsNames.WallItemName] = false;
 			MenuStates[(int)MenuItemsNames.SpawnItemName] = false;
 			MenuStates[(int)MenuItemsNames.ExitItemName] = false;
-			MenuStates[(int)MenuItemsNames.CheckPointItemName] = false;
 			MouseHandlers = new MouseEventHandler[(int)MouseHandlersNames.Size];
 			MouseHandlers[(int)MouseHandlersNames.MouseDownName] = null;
 			MouseHandlers[(int)MouseHandlersNames.MouseMoveName] = null;
 			MouseHandlers[(int)MouseHandlersNames.MouseUpName] = null;
+			form.setTotalEnabled(true);
 		}
 	}
 

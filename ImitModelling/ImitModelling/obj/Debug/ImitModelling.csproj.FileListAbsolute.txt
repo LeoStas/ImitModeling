@@ -16,3 +16,4 @@ C:\Users\leost\OneDrive\Документы\Visual Studio 2015\Projects\ImitModel
 C:\Users\leost\OneDrive\Документы\Visual Studio 2015\Projects\ImitModeling\ImitModelling\ImitModelling\bin\Debug\ImitModelling.exe
 C:\Users\leost\OneDrive\Документы\Visual Studio 2015\Projects\ImitModeling\ImitModelling\ImitModelling\bin\Debug\ImitModelling.pdb
 C:\Users\leost\OneDrive\Документы\Visual Studio 2015\Projects\ImitModeling\ImitModelling\ImitModelling\obj\Debug\ImitModelling.ImitationForm.resources
+C:\Users\leost\OneDrive\Документы\Visual Studio 2015\Projects\ImitModeling\ImitModelling\ImitModelling\obj\Debug\ImitModelling.SpawnDistribution.resources

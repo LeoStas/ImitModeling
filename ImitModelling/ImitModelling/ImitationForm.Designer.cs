@@ -43,16 +43,19 @@
 			this.WallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.SpawnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.ExitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.CheckpointToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.StartDemoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.incSize = new System.Windows.Forms.Button();
 			this.decSize = new System.Windows.Forms.Button();
 			this.timerMove = new System.Windows.Forms.Timer(this.components);
 			this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
 			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
 			this.panel1 = new System.Windows.Forms.Panel();
+			this.totalAgentsUpDown = new System.Windows.Forms.NumericUpDown();
+			this.label1 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
 			this.menuStrip1.SuspendLayout();
 			this.panel1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.totalAgentsUpDown)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// pictureBox
@@ -75,7 +78,8 @@
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.файлToolStripMenuItem,
             this.масштабToolStripMenuItem,
-            this.EditToolStripMenuItem});
+            this.EditToolStripMenuItem,
+            this.StartDemoToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Size = new System.Drawing.Size(501, 24);
@@ -149,8 +153,7 @@
 			this.EditToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.WallToolStripMenuItem,
             this.SpawnToolStripMenuItem,
-            this.ExitToolStripMenuItem,
-            this.CheckpointToolStripMenuItem});
+            this.ExitToolStripMenuItem});
 			this.EditToolStripMenuItem.Name = "EditToolStripMenuItem";
 			this.EditToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
 			this.EditToolStripMenuItem.Text = "Правка";
@@ -159,7 +162,7 @@
 			// 
 			this.WallToolStripMenuItem.Enabled = false;
 			this.WallToolStripMenuItem.Name = "WallToolStripMenuItem";
-			this.WallToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+			this.WallToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
 			this.WallToolStripMenuItem.Text = "Стена";
 			this.WallToolStripMenuItem.Click += new System.EventHandler(this.WallToolStripMenuItem_Click);
 			// 
@@ -167,7 +170,7 @@
 			// 
 			this.SpawnToolStripMenuItem.Enabled = false;
 			this.SpawnToolStripMenuItem.Name = "SpawnToolStripMenuItem";
-			this.SpawnToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+			this.SpawnToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
 			this.SpawnToolStripMenuItem.Text = "Спаун";
 			this.SpawnToolStripMenuItem.Click += new System.EventHandler(this.SpawnToolStripMenuItem_Click);
 			// 
@@ -175,17 +178,16 @@
 			// 
 			this.ExitToolStripMenuItem.Enabled = false;
 			this.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem";
-			this.ExitToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+			this.ExitToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
 			this.ExitToolStripMenuItem.Text = "Выход";
 			this.ExitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
 			// 
-			// CheckpointToolStripMenuItem
+			// StartDemoToolStripMenuItem
 			// 
-			this.CheckpointToolStripMenuItem.Enabled = false;
-			this.CheckpointToolStripMenuItem.Name = "CheckpointToolStripMenuItem";
-			this.CheckpointToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
-			this.CheckpointToolStripMenuItem.Text = "Чекпойнт";
-			this.CheckpointToolStripMenuItem.Click += new System.EventHandler(this.CheckpointToolStripMenuItem_Click);
+			this.StartDemoToolStripMenuItem.Name = "StartDemoToolStripMenuItem";
+			this.StartDemoToolStripMenuItem.Size = new System.Drawing.Size(160, 20);
+			this.StartDemoToolStripMenuItem.Text = "Запустить демонстрацию";
+			this.StartDemoToolStripMenuItem.Click += new System.EventHandler(this.StartDemoToolStripMenuItem_Click);
 			// 
 			// incSize
 			// 
@@ -232,11 +234,38 @@
 			this.panel1.Size = new System.Drawing.Size(476, 398);
 			this.panel1.TabIndex = 7;
 			// 
+			// totalAgentsUpDown
+			// 
+			this.totalAgentsUpDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.totalAgentsUpDown.Enabled = false;
+			this.totalAgentsUpDown.Location = new System.Drawing.Point(165, 432);
+			this.totalAgentsUpDown.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+			this.totalAgentsUpDown.Name = "totalAgentsUpDown";
+			this.totalAgentsUpDown.Size = new System.Drawing.Size(84, 20);
+			this.totalAgentsUpDown.TabIndex = 8;
+			this.totalAgentsUpDown.ValueChanged += new System.EventHandler(this.totalAgentsUpDown_ValueChanged);
+			// 
+			// label1
+			// 
+			this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(10, 434);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(149, 13);
+			this.label1.TabIndex = 9;
+			this.label1.Text = "Общее количество агентов:";
+			// 
 			// ImitationForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(501, 467);
+			this.Controls.Add(this.label1);
+			this.Controls.Add(this.totalAgentsUpDown);
 			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.decSize);
 			this.Controls.Add(this.incSize);
@@ -250,6 +279,7 @@
 			this.menuStrip1.PerformLayout();
 			this.panel1.ResumeLayout(false);
 			this.panel1.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.totalAgentsUpDown)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -276,8 +306,10 @@
 		private System.Windows.Forms.ToolStripMenuItem WallToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem SpawnToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem ExitToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem CheckpointToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem FinishEditToolStripMenuItem;
+		private System.Windows.Forms.NumericUpDown totalAgentsUpDown;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.ToolStripMenuItem StartDemoToolStripMenuItem;
 	}
 }
 

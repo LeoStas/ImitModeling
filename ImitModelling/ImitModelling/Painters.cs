@@ -105,8 +105,9 @@ namespace ImitModelling
 		public override void draw(CheckpointCell cell)
 		{
 			SpawnCell saved = grid.savedSpawn;
+			Point p = cell.gridToPictureTransform(xOffset, yOffset);
+			g.DrawRectangle(Pens.Black, p.X, p.Y, Cell.r, Cell.r);
 			if (saved != null && saved.checkPoints.Contains(new Tuple<int, int>(cell.X, cell.Y))) {
-				Point p = cell.gridToPictureTransform(xOffset, yOffset);
 				g.FillRectangle(new SolidBrush(Color.Red), p.X, p.Y, Cell.r, Cell.r);
 			}
 		}

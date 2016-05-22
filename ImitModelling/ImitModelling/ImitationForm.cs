@@ -3,8 +3,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Reflection;
-using System.ComponentModel;
+using System.Collections.Generic;
 
 namespace ImitModelling
 {
@@ -15,6 +14,8 @@ namespace ImitModelling
 		{
 			public Grid grid;
 			public ProgramState state;
+			public int TotalEstimate;
+			public int TotalAgents;
 		}
 		static int NUM;
 		private CellFactory factory;
@@ -34,6 +35,7 @@ namespace ImitModelling
 			prj.state.LoadState(this);
 			isDown = false;
 			factory = new EmptyFactory();
+			prj.TotalEstimate = 100;
             InitializeComponent();
 			this.pictureBox.Hide();
 		}
@@ -244,17 +246,34 @@ namespace ImitModelling
 					}
 				} else if (e.Button == MouseButtons.Right) {
 					if (chosen is SpawnCell) {
-
+						prj.grid.savedSpawn = chosen as SpawnCell;
+						this.pictureBox.Invalidate();
+						SpawnDistribution form = new SpawnDistribution((int)Math.Round(prj.grid.savedSpawn.Distribution * 100), prj.TotalEstimate);
+						form.DistribChanged += new SpawnDistribution.SpawnDistribChangedHandler(F1_DistribChanged);
+						form.ShowDialog(this);
 					} else if (chosen is CheckpointCell) {
-						foreach (Tuple<int, int> spawnCoord in prj.grid.spawnCells) {
-							SpawnCell spawn = (prj.grid.getCell(spawnCoord) as SpawnCell);
-							spawn.checkPoints.Remove(new Tuple<int, int>(chosen.X, chosen.Y));
+						bool hasOther = false;
+						foreach (var spawn in prj.grid.spawnCells) {
+							if (spawn == prj.grid.savedSpawn) {
+								spawn.checkPoints.Remove(new Tuple<int, int>(chosen.X, chosen.Y));
+							} else {
+								hasOther = true;
+							}
 						}
-						prj.grid.setCell(chosen.X, chosen.Y, new EmptyCell(chosen.X, chosen.Y));
+						if (!hasOther) {
+							prj.grid.setCell(chosen.X, chosen.Y, new EmptyCell(chosen.X, chosen.Y));
+						}
 					}
 				}
 			}
 			isDown = true;
+			this.pictureBox.Invalidate();
+		}
+
+		public void F1_DistribChanged(object sender, DistribEventArgs e)
+		{
+			prj.TotalEstimate -= (int)(Math.Round((e.Distribution - prj.grid.savedSpawn.Distribution) * 100));
+			prj.grid.savedSpawn.Distribution = e.Distribution;
 			this.pictureBox.Invalidate();
 		}
 
@@ -293,15 +312,6 @@ namespace ImitModelling
 			factory = new ExitFactory();
 		}
 
-		private void CheckpointToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			foreach (ToolStripMenuItem tsmi in this.EditToolStripMenuItem.DropDownItems) {
-				tsmi.Checked = false;
-			}
-			this.CheckpointToolStripMenuItem.Checked = true;
-			factory = new CheckpointFactory();
-		}
-
 		private void FinishEditToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (prj.grid == null) return;
@@ -310,5 +320,47 @@ namespace ImitModelling
 			prj.state.LoadState(this);
 			this.pictureBox.Invalidate();
 		}
-	}    
+
+		public void setTotalEnabled(bool enabled)
+		{
+			this.totalAgentsUpDown.Enabled = enabled;
+		}
+
+		private void StartDemoToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			List<Event> events = new List<Event>();
+			foreach (var spawn in prj.grid.spawnCells) {
+				events.Add(new GenerateAgentsEvent(spawn, (int)Math.Round(spawn.Distribution * prj.TotalAgents)));
+			}
+			EventExecutor evexec = new EventExecutor(prj.grid);
+			foreach (var cur in events) {
+				cur.execute(evexec);
+			}
+			this.pictureBox.Invalidate();
+		}
+
+		private void totalAgentsUpDown_ValueChanged(object sender, EventArgs e)
+		{
+			prj.TotalAgents = (int)this.totalAgentsUpDown.Value;
+		}
+	}
+	public class DistribEventArgs : EventArgs
+	{
+		private double distribution;
+		public double Distribution
+		{
+			get
+			{
+				return distribution;
+			}
+			set
+			{
+				distribution = value;
+			}
+		}
+		public DistribEventArgs(double distribution) : base()
+		{
+			this.distribution = distribution;
+		}
+	}
 }

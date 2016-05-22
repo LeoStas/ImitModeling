@@ -83,10 +83,34 @@ namespace ImitModelling
 	public class SpawnCell : NotOccupiedCell
 	{
 		private double distribution;
-		public List<Tuple<int, int>> checkPoints;
-		public SpawnCell(int x, int y, double distr) : base(x, y)
+		public double Distribution
 		{
-			distribution = distr;
+			get
+			{
+				return distribution;
+			}
+			set
+			{
+				distribution = value;
+			}
+		}
+		private int estimateAgentsCnt;
+		public int EstimateAgentsCnt
+		{
+			get
+			{
+				return EstimateAgentsCnt;
+			}
+			set
+			{
+				EstimateAgentsCnt = value;
+			}
+		}
+		public List<Tuple<int, int>> checkPoints;
+		public SpawnCell(int x, int y, double distribution) : base(x, y)
+		{
+			estimateAgentsCnt = 0;
+			this.distribution = distribution;
 			checkPoints = new List<Tuple<int, int>>();
 		}
 

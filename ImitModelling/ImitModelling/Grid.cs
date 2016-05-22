@@ -10,16 +10,16 @@ namespace ImitModelling
 	public class Grid
 	{
 		private Cell[,] grid;
-		public List<Tuple<int, int>> spawnCells;
-		private List<Tuple<int, int>> agentCells;
-		private List<Tuple<int, int>> exitCells;
+		public List<SpawnCell> spawnCells;
+		private List<AgentCell> agentCells;
+		private List<ExitCell> exitCells;
 		public SpawnCell savedSpawn;
 		private Dictionary<Tuple<int, int>, Tuple<int, int>> fullNext;
 		public Grid()
 		{
-			spawnCells = new List<Tuple<int, int>>();
-			agentCells = new List<Tuple<int, int>>();
-			exitCells = new List<Tuple<int, int>>();
+			spawnCells = new List<SpawnCell>();
+			agentCells = new List<AgentCell>();
+			exitCells = new List<ExitCell>();
 			grid = null;
 			savedSpawn = null;
 		}
@@ -67,20 +67,30 @@ namespace ImitModelling
 					cutGrid[i, j] = grid[yStart + i, xStart + j];
 					var oldPoint = new Tuple<int, int>(cutGrid[i, j].X, cutGrid[i, j].Y);
 					var newPoint = new Tuple<int, int>(j, i);
+					
+					foreach (var spawn in spawnCells) {
+						if (spawn.X == oldPoint.Item1 && spawn.Y == oldPoint.Item2) {
+							spawnCells.Remove(spawn);
+							spawnCells.Add(cutGrid[i, j] as SpawnCell);
+							break;
+						}
+					}
+					foreach (var exit in exitCells) {
+						if (exit.X == oldPoint.Item1 && exit.Y == oldPoint.Item2) {
+							exitCells.Remove(exit);
+							exitCells.Add(cutGrid[i, j] as ExitCell);
+							break;
+						}
+					}
+					foreach (var agent in agentCells) {
+						if (agent.X == oldPoint.Item1 && agent.Y == oldPoint.Item2) {
+							agentCells.Remove(agent);
+							agentCells.Add(cutGrid[i, j] as AgentCell);
+							break;
+						}
+					}
 					cutGrid[i, j].X = j;
 					cutGrid[i, j].Y = i;
-					if (spawnCells.Contains(oldPoint)) {
-						spawnCells.Remove(oldPoint);
-						spawnCells.Add(newPoint);
-					}
-					if (exitCells.Contains(oldPoint)) {
-						exitCells.Remove(oldPoint);
-						exitCells.Add(newPoint);
-					}
-					if (agentCells.Contains(oldPoint)) {
-						agentCells.Remove(oldPoint);
-						agentCells.Add(newPoint);
-					}
 				}
 			}
 			grid = cutGrid;
@@ -134,16 +144,12 @@ namespace ImitModelling
 				return false;
 			}
 			grid[y, x] = cell;
-			var coords = new Tuple<int, int>(cell.X, cell.Y);
-			spawnCells.Remove(coords);
-			exitCells.Remove(coords);
-			agentCells.Remove(coords);
 			if (cell is SpawnCell) {
-				spawnCells.Add(coords);
+				spawnCells.Add(cell as SpawnCell);
 			} else if (cell is ExitCell) {
-				exitCells.Add(coords);
+				exitCells.Add(cell as ExitCell);
 			} else if (cell is AgentCell) {
-				agentCells.Add(coords);
+				agentCells.Add(cell as AgentCell);
 			}
 			return true;
 		}
@@ -172,16 +178,16 @@ namespace ImitModelling
 			return null;
 		}
 
-		public List<Tuple<int, int> > neightbours(Tuple<int, int> cur)
+		public List<Tuple<int, int> > neightbours(Tuple<int, int> cur) // cur.Item1 == X, cur.Item2 == Y
 		{
 			if (grid == null) {
 				return null;
 			}
 			var res = new List<Tuple<int, int>>();
-			for (int i = Math.Max(cur.Item1 - 1, 0); i < Math.Min(cur.Item1 + 2, grid.GetLength(0)); ++i) {
-				for (int j = Math.Max(cur.Item2 - 1, 0); j < Math.Min(cur.Item2 + 2, grid.GetLength(1)); ++j) {
-					if (cur.Item1 == i && cur.Item2 == j) continue;
-					res.Add(new Tuple<int, int>(i, j));
+			for (int i = Math.Max(cur.Item2 - 1, 0); i < Math.Min(cur.Item2 + 2, Height()); ++i) {
+				for (int j = Math.Max(cur.Item1 - 1, 0); j < Math.Min(cur.Item1 + 2, Width()); ++j) {
+					if (cur.Item2 == i && cur.Item1 == j) continue;
+					res.Add(new Tuple<int, int>(j, i));
 				}
 			}
 			return res;
