@@ -12,7 +12,7 @@ namespace ImitModelling
 		private Cell[,] grid;
 		public List<SpawnCell> spawnCells;
 		private List<AgentCell> agentCells;
-		private List<ExitCell> exitCells;
+		public List<ExitCell> exitCells;
 		public SpawnCell savedSpawn;
 		private Dictionary<Tuple<int, int>, Tuple<int, int>> fullNext;
 		public Grid()
@@ -145,13 +145,46 @@ namespace ImitModelling
 			}
 			grid[y, x] = cell;
 			if (cell is SpawnCell) {
-				spawnCells.Add(cell as SpawnCell);
+				bool found = false;
+				foreach (var spawn in spawnCells) {
+					if (spawn.X == x && spawn.Y == y) {
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					spawnCells.Add(cell as SpawnCell);
+				}
+				
 			} else if (cell is ExitCell) {
-				exitCells.Add(cell as ExitCell);
+				bool found = false;
+				foreach (var exit in exitCells) {
+					if (exit.X == x && exit.Y == y) {
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					exitCells.Add(cell as ExitCell);
+				}
 			} else if (cell is AgentCell) {
-				agentCells.Add(cell as AgentCell);
+				bool found = false;
+				foreach (var agent in agentCells) {
+					if (agent.X == x && agent.Y == y) {
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					agentCells.Add(cell as AgentCell);
+				}
 			}
 			return true;
+		}
+
+		public bool setCell(Tuple<int, int> coords, Cell cell)
+		{
+			return setCell(coords.Item1, coords.Item2, cell);
 		}
 
 		public void Draw(Painter painter)
@@ -202,13 +235,13 @@ namespace ImitModelling
 			if (cur.Item1 - 1 >= 0) {
 				res.Add(new Tuple<int, int>(cur.Item1 - 1, cur.Item2));
 			}
-			if (cur.Item1 + 1 < grid.GetLength(0)) {
+			if (cur.Item1 + 1 < Width()) {
 				res.Add(new Tuple<int, int>(cur.Item1 + 1, cur.Item2));
 			}
 			if (cur.Item2 - 1 >= 0) {
 				res.Add(new Tuple < int, int >(cur.Item1, cur.Item2 - 1));
 			}
-			if (cur.Item2 + 1 < grid.GetLength(1)) {
+			if (cur.Item2 + 1 < Height()) {
 				res.Add(new Tuple<int, int>(cur.Item1, cur.Item2 + 1));
 			}
 			return res;

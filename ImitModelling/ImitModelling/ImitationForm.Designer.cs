@@ -215,7 +215,7 @@
 			// 
 			// timerMove
 			// 
-			this.timerMove.Interval = 5;
+			this.timerMove.Interval = 500;
 			this.timerMove.Tick += new System.EventHandler(this.timerMove_Tick);
 			// 
 			// openFileDialog1

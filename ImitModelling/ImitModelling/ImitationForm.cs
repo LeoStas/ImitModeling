@@ -21,6 +21,7 @@ namespace ImitModelling
 		private CellFactory factory;
 		private bool isDown;
 		private Project prj;
+		List<Event> events;
 		static ImitationForm()
 		{
 			NUM = 6;
@@ -31,6 +32,7 @@ namespace ImitModelling
 			prj = new Project();
             prj.grid = new Grid();
 			prj.state = new ProgramState();
+			events = new List<Event>();
 			//prj.state = new EditAllCellsState(this);
 			prj.state.LoadState(this);
 			isDown = false;
@@ -38,6 +40,11 @@ namespace ImitModelling
 			prj.TotalEstimate = 100;
             InitializeComponent();
 			this.pictureBox.Hide();
+		}
+
+		public void AddEvent(Event ev)
+		{
+			events.Add(ev);
 		}
 
 		public void SaveState(string filename)
@@ -130,11 +137,12 @@ namespace ImitModelling
 
 		private void timerMove_Tick(object sender, EventArgs e)
 		{
-			if (NUM > 0) {
-				//prj.grid.generateAgents();
-				NUM--;
+			EventExecutor evexec = new EventExecutor(prj.grid, this);
+			if (events.Count > 0) {
+				Event ev = events[0];
+				events.RemoveAt(0);
+				ev.execute(evexec);
 			}
-			//prj.grid.makeMove();
 			this.pictureBox.Invalidate();
 		}
 
@@ -182,6 +190,21 @@ namespace ImitModelling
 					toSet = factory.createCell(chosen.X, chosen.Y);
 				} else if (e.Button == MouseButtons.Right) {
 					toSet = new EmptyCell(chosen.X, chosen.Y);
+					if (chosen is ExitCell) {
+						foreach (var exit in prj.grid.exitCells) {
+							if (exit.X == chosen.X && exit.Y == chosen.Y) {
+								prj.grid.exitCells.Remove(exit);
+								break;
+							}
+						}
+					} else if (chosen is SpawnCell) {
+						foreach (var spawn in prj.grid.spawnCells) {
+							if (spawn.X == chosen.X && spawn.Y == chosen.Y) {
+								prj.grid.spawnCells.Remove(spawn);
+								break;
+							}
+						}
+					}
 				}
 				if (toSet != null) {
 					prj.grid.setCell(chosen.X, chosen.Y, toSet);
@@ -201,6 +224,21 @@ namespace ImitModelling
 						toSet = factory.createCell(chosen.X, chosen.Y);
 					} else if (e.Button == MouseButtons.Right) {
 						toSet = new EmptyCell(chosen.X, chosen.Y);
+						if (chosen is ExitCell) {
+							foreach (var exit in prj.grid.exitCells) {
+								if (exit.X == chosen.X && exit.Y == chosen.Y) {
+									prj.grid.exitCells.Remove(exit);
+									break;
+								}
+							}
+						} else if (chosen is SpawnCell) {
+							foreach (var spawn in prj.grid.spawnCells) {
+								if (spawn.X == chosen.X && spawn.Y == chosen.Y) {
+									prj.grid.spawnCells.Remove(spawn);
+									break;
+								}
+							}
+						}
 					}
 					if (toSet != null) {
 						prj.grid.setCell(chosen.X, chosen.Y, toSet);
@@ -328,15 +366,11 @@ namespace ImitModelling
 
 		private void StartDemoToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			List<Event> events = new List<Event>();
 			foreach (var spawn in prj.grid.spawnCells) {
 				events.Add(new GenerateAgentsEvent(spawn, (int)Math.Round(spawn.Distribution * prj.TotalAgents)));
 			}
-			EventExecutor evexec = new EventExecutor(prj.grid);
-			foreach (var cur in events) {
-				cur.execute(evexec);
-			}
-			this.pictureBox.Invalidate();
+			EventExecutor evexec = new EventExecutor(prj.grid, this);
+			this.timerMove.Start();
 		}
 
 		private void totalAgentsUpDown_ValueChanged(object sender, EventArgs e)
