@@ -78,8 +78,16 @@ namespace ImitModelling
 		public AgentMoveEvent(AgentCell agent, List<Tuple<int, int>> checkpoints) : base()
 		{
 			this.agent = agent;
-			this.checkpoints = checkpoints;
+			this.checkpoints = new List<Tuple<int, int>>();
+			this.checkpoints.AddRange(checkpoints);
 		}
+		public override void execute(EventExecutor executor)
+		{
+			executor.execute(this);
+		}
+	}
+	public class TickEvent : Event
+	{
 		public override void execute(EventExecutor executor)
 		{
 			executor.execute(this);
@@ -99,6 +107,12 @@ namespace ImitModelling
 		public int Distance(Tuple<int, int> coord1, Tuple<int, int> coord2)
 		{
 			return Math.Abs(coord1.Item1 - coord2.Item1) + Math.Abs(coord1.Item2 - coord2.Item2);
+		}
+
+		public void execute(TickEvent ev)
+		{
+			form.reDraw();
+			form.AddEvent(ev);
 		}
 
 		public void execute(AgentMoveEvent ev)
@@ -127,9 +141,14 @@ namespace ImitModelling
 			for (int i = 0; i < distances.Count && distances[i].Value == distances[0].Value; ++i) {
 				if (grid.getCell(distances[i].Key) is NotOccupiedCell) {
 					grid.setCell(ev.Agent.X, ev.Agent.Y, new EmptyCell(ev.Agent.X, ev.Agent.Y));
-					ev.Agent.X = distances[i].Key.Item1;
-					ev.Agent.Y = distances[i].Key.Item2;
-					grid.setCell(distances[i].Key, ev.Agent);
+					if (!(grid.getCell(distances[i].Key) is ExitCell)) {
+						ev.Agent.X = distances[i].Key.Item1;
+						ev.Agent.Y = distances[i].Key.Item2;
+						grid.setCell(distances[i].Key, ev.Agent);
+					} else {
+						grid.agentCells.Remove(ev.Agent);
+						return;
+					}
 					break;
 				}
 			}

@@ -11,7 +11,7 @@ namespace ImitModelling
 	{
 		private Cell[,] grid;
 		public List<SpawnCell> spawnCells;
-		private List<AgentCell> agentCells;
+		public List<AgentCell> agentCells;
 		public List<ExitCell> exitCells;
 		public SpawnCell savedSpawn;
 		private Dictionary<Tuple<int, int>, Tuple<int, int>> fullNext;

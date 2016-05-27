@@ -143,7 +143,6 @@ namespace ImitModelling
 				events.RemoveAt(0);
 				ev.execute(evexec);
 			}
-			this.pictureBox.Invalidate();
 		}
 
 		private void createToolStripMenuItem_Click(object sender, EventArgs e)
@@ -364,12 +363,26 @@ namespace ImitModelling
 			this.totalAgentsUpDown.Enabled = enabled;
 		}
 
+		public void reDraw()
+		{
+			this.pictureBox.Invalidate();
+		}
+
 		private void StartDemoToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			if (prj.TotalAgents <= 0) {
+				return;
+			}
 			foreach (var spawn in prj.grid.spawnCells) {
 				events.Add(new GenerateAgentsEvent(spawn, (int)Math.Round(spawn.Distribution * prj.TotalAgents)));
 			}
+			AddEvent(new TickEvent());
 			EventExecutor evexec = new EventExecutor(prj.grid, this);
+			/*while (events.Count > 0) {
+				Event ev = events[0];
+				events.RemoveAt(0);
+				ev.execute(evexec);
+			}*/
 			this.timerMove.Start();
 		}
 
