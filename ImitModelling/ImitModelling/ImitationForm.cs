@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace ImitModelling
 {
@@ -17,15 +18,11 @@ namespace ImitModelling
 			public int TotalEstimate;
 			public int TotalAgents;
 		}
-		static int NUM;
 		private CellFactory factory;
 		private bool isDown;
 		private Project prj;
 		List<Event> events;
-		static ImitationForm()
-		{
-			NUM = 6;
-		}
+		Thread thread;
 
         public ImitationForm()
         {
@@ -137,11 +134,17 @@ namespace ImitModelling
 
 		private void timerMove_Tick(object sender, EventArgs e)
 		{
+			/*
 			EventExecutor evexec = new EventExecutor(prj.grid, this);
 			if (events.Count > 0) {
 				Event ev = events[0];
 				events.RemoveAt(0);
 				ev.execute(evexec);
+			}
+			*/
+			if (thread != null && thread.ThreadState == ThreadState.Suspended) {
+				this.pictureBox.Invalidate();
+				thread.Resume();
 			}
 		}
 
@@ -383,7 +386,24 @@ namespace ImitModelling
 				events.RemoveAt(0);
 				ev.execute(evexec);
 			}*/
+			thread = new Thread(Cycle);
 			this.timerMove.Start();
+			thread.Start();
+		}
+
+		private void Cycle()
+		{
+			EventExecutor evexec = new EventExecutor(prj.grid, this);
+			while (events.Count > 0) {
+				Event ev = events[0];
+				events.RemoveAt(0);
+				if (ev is TickEvent) {
+					events.Add(ev);
+					thread.Suspend();
+				} else {
+					ev.execute(evexec);
+				}
+			}
 		}
 
 		private void totalAgentsUpDown_ValueChanged(object sender, EventArgs e)
