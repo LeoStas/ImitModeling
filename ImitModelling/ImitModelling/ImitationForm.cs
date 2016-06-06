@@ -19,6 +19,7 @@ namespace ImitModelling
 			public int TotalAgents;
 		}
 		private CellFactory factory;
+		private Type painter;
 		private bool isDown;
 		private Project prj;
 		List<Event> events;
@@ -30,10 +31,10 @@ namespace ImitModelling
             prj.grid = new Grid();
 			prj.state = new ProgramState();
 			events = new List<Event>();
-			//prj.state = new EditAllCellsState(this);
 			prj.state.LoadState(this);
 			isDown = false;
 			factory = new EmptyFactory();
+			painter = typeof(CreatePainter);
 			prj.TotalEstimate = 100;
             InitializeComponent();
 			this.pictureBox.Hide();
@@ -100,7 +101,12 @@ namespace ImitModelling
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
-			CreatePainter cptr = new CreatePainter(xOffset(), yOffset(), e.Graphics, prj.grid);
+			Painter cptr;
+			if (painter == typeof(CreatePainter)) {
+				cptr = new CreatePainter(xOffset(), yOffset(), e.Graphics, prj.grid);
+			} else {
+				cptr = new WorkPainter(xOffset(), yOffset(), e.Graphics, prj.grid);
+			}
 			prj.grid.Draw(cptr);
 			Size size = new Size(prj.grid.Width() * Cell.r, prj.grid.Height() * Cell.r);
 			panel1.AutoScrollMinSize = size;
@@ -137,14 +143,19 @@ namespace ImitModelling
 			/*
 			EventExecutor evexec = new EventExecutor(prj.grid, this);
 			if (events.Count > 0) {
-				Event ev = events[0];
-				events.RemoveAt(0);
+				
 				ev.execute(evexec);
 			}
 			*/
 			if (thread != null && thread.ThreadState == ThreadState.Suspended) {
 				this.pictureBox.Invalidate();
 				thread.Resume();
+			} else if (thread != null && thread.ThreadState == ThreadState.Stopped) {
+				timerMove.Stop();
+				TickEvent ev = events[0] as TickEvent;
+				events.RemoveAt(0);
+				string str = "Эвакуация проведена за " + ev.Ticks + " тактов";
+				MessageBox.Show(this, str, "Результат", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
 			}
 		}
 
@@ -162,7 +173,7 @@ namespace ImitModelling
 		{
 			if (enabled == null) return;
 			int i = 0;
-			foreach (ToolStripMenuItem tsmi in this.EditToolStripMenuItem.DropDownItems) {
+			foreach (ToolStripMenuItem tsmi in this.DrawToolStripMenuItem.DropDownItems) {
 				tsmi.Checked = false;
 				tsmi.Enabled = enabled[i];
 			}
@@ -257,16 +268,6 @@ namespace ImitModelling
 
 		public void EditSpawn_PictureBox_MouseDown(object sender, MouseEventArgs e)
 		{
-
-		}
-
-		public void EditSpawn_PictureBox_MouseMove(object sender, MouseEventArgs e)
-		{
-
-		}
-
-		public void EditSpawn_PictureBox_MouseUp(object sender, MouseEventArgs e)
-		{
 			if (prj.grid == null) return;
 			Cell chosen = prj.grid.findCellPictureCoords(new Point(e.X, e.Y), xOffset(), yOffset());
 			if (chosen != null) {
@@ -306,8 +307,17 @@ namespace ImitModelling
 					}
 				}
 			}
-			isDown = true;
 			this.pictureBox.Invalidate();
+		}
+
+		public void EditSpawn_PictureBox_MouseMove(object sender, MouseEventArgs e)
+		{
+
+		}
+
+		public void EditSpawn_PictureBox_MouseUp(object sender, MouseEventArgs e)
+		{
+			
 		}
 
 		public void F1_DistribChanged(object sender, DistribEventArgs e)
@@ -326,7 +336,7 @@ namespace ImitModelling
 
 		private void WallToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			foreach (ToolStripMenuItem tsmi in this.EditToolStripMenuItem.DropDownItems) {
+			foreach (ToolStripMenuItem tsmi in this.DrawToolStripMenuItem.DropDownItems) {
 				tsmi.Checked = false;
 			}
 			this.WallToolStripMenuItem.Checked = true;
@@ -336,7 +346,7 @@ namespace ImitModelling
 
 		private void SpawnToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			foreach (ToolStripMenuItem tsmi in this.EditToolStripMenuItem.DropDownItems) {
+			foreach (ToolStripMenuItem tsmi in this.DrawToolStripMenuItem.DropDownItems) {
 				tsmi.Checked = false;
 			}
 			this.SpawnToolStripMenuItem.Checked = true;
@@ -345,7 +355,7 @@ namespace ImitModelling
 
 		private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			foreach (ToolStripMenuItem tsmi in this.EditToolStripMenuItem.DropDownItems) {
+			foreach (ToolStripMenuItem tsmi in this.DrawToolStripMenuItem.DropDownItems) {
 				tsmi.Checked = false;
 			}
 			this.ExitToolStripMenuItem.Checked = true;
@@ -386,6 +396,9 @@ namespace ImitModelling
 				events.RemoveAt(0);
 				ev.execute(evexec);
 			}*/
+			prj.state = new WorkingState(this);
+			prj.state.LoadState(this);
+			painter = typeof(WorkPainter);
 			thread = new Thread(Cycle);
 			this.timerMove.Start();
 			thread.Start();
@@ -397,11 +410,15 @@ namespace ImitModelling
 			while (events.Count > 0) {
 				Event ev = events[0];
 				events.RemoveAt(0);
+				ev.execute(evexec);
+				bool last = false;
 				if (ev is TickEvent) {
 					events.Add(ev);
+					last = (events.Count <= 1);
 					thread.Suspend();
-				} else {
-					ev.execute(evexec);
+				}
+				if (last) {
+					break;
 				}
 			}
 		}
@@ -409,6 +426,16 @@ namespace ImitModelling
 		private void totalAgentsUpDown_ValueChanged(object sender, EventArgs e)
 		{
 			prj.TotalAgents = (int)this.totalAgentsUpDown.Value;
+		}
+
+		private void SlowDemoToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			timerMove.Interval *= timerMove.Interval > 10000 ? 1 : 5;
+		}
+
+		private void SpeedUpDemoToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			timerMove.Interval /= timerMove.Interval >= 5 ? 5 : 1;
 		}
 	}
 	public class DistribEventArgs : EventArgs

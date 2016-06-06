@@ -6,9 +6,53 @@ namespace ImitModelling
 	public abstract class Painter
 	{
 		protected int xOffset;
+		public int XOffset
+		{
+			get
+			{
+				return xOffset;
+			}
+			set
+			{
+				xOffset = value;
+			}
+		}
 		protected int yOffset;
+		public int YOffset
+		{
+			get
+			{
+				return yOffset;
+			}
+			set
+			{
+				yOffset = value;
+			}
+		}
 		protected Graphics g;
+		public Graphics Grap
+		{
+			get
+			{
+				return g;
+			}
+			set
+			{
+				g = value;
+			}
+		}
 		protected Grid grid;
+		public Grid Grid
+		{
+			get
+			{
+				return grid;
+			}
+			set
+			{
+				grid = value;
+			}
+		}
 		public Painter(int xOffset, int yOffset, Graphics g, Grid grid)
 		{
 			this.xOffset = xOffset;
@@ -32,8 +76,8 @@ namespace ImitModelling
 		}
 		public override void draw(EmptyCell cell)
 		{
-			Point p = cell.gridToPictureTransform(xOffset, yOffset);
-			g.DrawRectangle(Pens.Black, p.X, p.Y, Cell.r, Cell.r);
+			/*Point p = cell.gridToPictureTransform(xOffset, yOffset);
+			g.DrawRectangle(Pens.Black, p.X, p.Y, Cell.r, Cell.r);*/
 		}
 		public override void draw(ExitCell cell)
 		{
@@ -42,8 +86,8 @@ namespace ImitModelling
 		}
 		public override void draw(SpawnCell cell)
 		{
-			Point p = cell.gridToPictureTransform(xOffset, yOffset);
-			g.DrawRectangle(Pens.Black, p.X, p.Y, Cell.r, Cell.r);
+			/*Point p = cell.gridToPictureTransform(xOffset, yOffset);
+			g.DrawRectangle(Pens.Black, p.X, p.Y, Cell.r, Cell.r);*/
 		}
 		public override void draw(AgentCell cell)
 		{
@@ -58,8 +102,9 @@ namespace ImitModelling
 		}
 		public override void draw(CheckpointCell cell)
 		{
+			/*
 			Point p = cell.gridToPictureTransform(xOffset, yOffset);
-			g.DrawRectangle(Pens.Black, p.X, p.Y, Cell.r, Cell.r);
+			g.DrawRectangle(Pens.Black, p.X, p.Y, Cell.r, Cell.r);*/
 		}
 	}
 

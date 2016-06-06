@@ -14,7 +14,6 @@ namespace ImitModelling
 		public List<AgentCell> agentCells;
 		public List<ExitCell> exitCells;
 		public SpawnCell savedSpawn;
-		private Dictionary<Tuple<int, int>, Tuple<int, int>> fullNext;
 		public Grid()
 		{
 			spawnCells = new List<SpawnCell>();
@@ -120,64 +119,38 @@ namespace ImitModelling
 			return getCell(p.Item1, p.Item2);
 		}
 
-		/*public void fillFull()
-		{
-			var forbid = new List<Type>
-			{
-				typeof(WallCell)
-			};
-			fullNext = new Dictionary<Tuple<int, int>, Tuple<int, int>>();
-			for (int i = 0; i < grid.GetLength(0); ++i) {
-				for (int j = 0; j < grid.GetLength(1); ++j) {
-					var cur = new Tuple<int, int>(i, j);
-					if (getCell(cur) is WallCell || getCell(cur) is ExitCell) {
-						continue;
-					}
-					fullNext[cur] = AStarNext(cur, forbid);
-				}
-			}
-		}*/
-
 		public bool setCell(int x, int y, Cell cell)
 		{
 			if (y < 0 || y >= Height() || x < 0 || x >= Width()) {
 				return false;
 			}
 			grid[y, x] = cell;
+			if (!(cell is AgentCell) && !(cell is EmptyCell)) {
+				foreach (var cur in spawnCells) {
+					if (cur.X == x && cur.Y == y) {
+						spawnCells.Remove(cur);
+						break;
+					}
+				}
+				foreach (var cur in exitCells) {
+					if (cur.X == x && cur.Y == y) {
+						exitCells.Remove(cur);
+						break;
+					}
+				}
+				foreach (var cur in agentCells) {
+					if (cur.X == x && cur.Y == y) {
+						agentCells.Remove(cur);
+						break;
+					}
+				}
+			}
 			if (cell is SpawnCell) {
-				bool found = false;
-				foreach (var spawn in spawnCells) {
-					if (spawn.X == x && spawn.Y == y) {
-						found = true;
-						break;
-					}
-				}
-				if (!found) {
-					spawnCells.Add(cell as SpawnCell);
-				}
-				
+				spawnCells.Add(cell as SpawnCell);
 			} else if (cell is ExitCell) {
-				bool found = false;
-				foreach (var exit in exitCells) {
-					if (exit.X == x && exit.Y == y) {
-						found = true;
-						break;
-					}
-				}
-				if (!found) {
-					exitCells.Add(cell as ExitCell);
-				}
+				exitCells.Add(cell as ExitCell);
 			} else if (cell is AgentCell) {
-				bool found = false;
-				foreach (var agent in agentCells) {
-					if (agent.X == x && agent.Y == y) {
-						found = true;
-						break;
-					}
-				}
-				if (!found) {
-					agentCells.Add(cell as AgentCell);
-				}
+				agentCells.Add(cell as AgentCell);
 			}
 			return true;
 		}
@@ -247,35 +220,14 @@ namespace ImitModelling
 			return res;
 		}
 
-		//public void generateAgents()
-		//{
-		//	if (grid == null) return;
-		//	foreach (Cell cell in spawnCells) {
-		//		var p = neightbours(new Tuple<int, int>(cell.X, cell.Y));
-		//		foreach (Tuple<int, int> cur in p) {
-		//			if (grid[cur.Item1, cur.Item2] is EmptyCell || grid[cur.Item1, cur.Item2] is SpawnCell) {
-		//				grid[cur.Item1, cur.Item2] = new AgentCell(cur.Item1, cur.Item2);
-		//				if (agentCells == null) {
-		//					agentCells = new List<Cell>();
-		//				}
-		//				agentCells.Add(grid[cur.Item1, cur.Item2]);
-		//			}
-		//		}
-		//	}
-		//}
+		private int distanceLeft(Tuple<int, int> from, Tuple<int, int> to)
+		{
+			if (from == null || to == null) {
+				return 0;
+			}
+			return Math.Abs(from.Item1 - to.Item1) + Math.Abs(from.Item2 - to.Item2);
+		}
 
-		//private int distanceLeft(Tuple<int, int> cur)
-		//{
-		//	if (exitCells == null || exitCells.Count == 0 || cur == null) {
-		//		return 0;
-		//	}
-		//	var res = Math.Abs(cur.Item1 - exitCells[0].X) + Math.Abs(cur.Item2 - exitCells[0].Y);
-		//	foreach (Cell exit in exitCells) {
-		//		res = Math.Min(res, Math.Abs(cur.Item1 - exit.X) + Math.Abs(cur.Item2 - exit.Y));
-		//	}
-		//	return res;
-		//}
-/*
 		private class AStarEntity
 		{
 			public Tuple<int, int> cell;
@@ -301,170 +253,62 @@ namespace ImitModelling
 				return distFromStart + approxLeft;
 			}
 		}
-*/
 
-		//public void makeMove()
-		//{
-		//	var paths = new List<Tuple<Cell, Tuple<int, int>>>();
-		//	var forbid = new List<Type>
-		//	{
-		//		typeof(WallCell),
-		//		typeof(AgentCell)
-		//	};
-		//	bool hasMore = true;
-		//	List<Cell> tmpAgents = new List<Cell>();
-		//	tmpAgents.AddRange(agentCells);
-		//	while (hasMore) { 
-		//		hasMore = false;
-		//		for (int i = tmpAgents.Count - 1; i >= 0; --i) {
-		//			Cell agent = tmpAgents[i];
-		//			Tuple<int, int> next = AStarNext(new Tuple<int, int>(agent.X, agent.Y), forbid); //fullNext[new Tuple<int, int>(agent.X, agent.Y)];
-		//			if (next == null) continue;
-		//			if (getCell(next) is EmptyCell) {
-		//				grid[agent.X, agent.Y] = new EmptyCell(agent.X, agent.Y);
-		//				agent.X = next.Item1;
-		//				agent.Y = next.Item2;
-		//				grid[agent.X, agent.Y] = agent;
-		//				tmpAgents.RemoveAt(i);
-		//				hasMore = true;
-		//			} else if (getCell(next) is ExitCell) {
-		//				grid[agent.X, agent.Y] = new EmptyCell(agent.X, agent.Y);
-		//				agentCells.Remove(agent);
-		//				tmpAgents.RemoveAt(i);
-		//			}
-		//		}
-		//	}
-		//	forbid.Remove(typeof(AgentCell));
-		//	if (tmpAgents.Count > 0) {
-		//		foreach (Cell agent in tmpAgents) {
-		//			Tuple<int, int> next = AStarNext(new Tuple<int, int>(agent.X, agent.Y), forbid);
-		//			if (next != null) {
-		//				paths.Add(new Tuple<Cell, Tuple<int, int>>(agent, next));
-		//			}
-		//		}
-		//	}
-		//	while (paths.Count > 0) {
-		//		paths.Sort(delegate (Tuple<Cell, Tuple<int, int>> x, Tuple<Cell, Tuple<int, int>> y)
-		//		{
-		//			if (distanceLeft(x.Item2) == distanceLeft(y.Item2)) return 0;
-		//			else if (distanceLeft(x.Item2) > distanceLeft(y.Item2)) return -1;
-		//			else return 1;
-		//		});
-		//		for (int i = paths.Count - 1; i >= 0; --i) {
-		//			Cell cur = paths[i].Item1;
-		//			if (getCell(paths[i].Item2) is EmptyCell) {
-		//				grid[cur.X, cur.Y] = new EmptyCell(cur.X, cur.Y);
-		//				cur.X = paths[i].Item2.Item1;
-		//				cur.Y = paths[i].Item2.Item2;
-		//				grid[cur.X, cur.Y] = cur;
-		//				paths.RemoveAt(i);
-		//			} else if (getCell(paths[i].Item2) is ExitCell) {
-		//				grid[cur.X, cur.Y] = new EmptyCell(cur.X, cur.Y);
-		//				paths.RemoveAt(i);
-		//				agentCells.Remove(cur);
-		//			}
-		//		}
-		//		if (paths.Count > 0) break;
-		//	}
-		//	/*
-		//	List<Cell> locked = new List<Cell>();
-		//	foreach (Cell agent in agentCells) {
-		//		Tuple<int, int> next = AStarNext(new Tuple<int, int>(agent.X, agent.Y), forbid);
-		//		if (next == null) {
-		//			locked.Add(agent);
-		//			continue;
-		//		}
-		//		paths.Add(new Tuple<Cell, Tuple<int, int>>(agent, next));
-		//	}
-		//	forbid.Remove(typeof(AgentCell));
-		//	foreach (Cell agent in locked) {
-		//		Tuple<int, int> next = AStarNext(new Tuple<int, int>(agent.X, agent.Y), forbid);
-		//		if (next == null) {
-		//			continue;
-		//		}
-		//		paths.Add(new Tuple<Cell, Tuple<int, int>>(agent, next));
-		//	}
-			
-		//	while (paths.Count > 0) {
-		//		paths.Sort(delegate (Tuple<Cell, Tuple<int, int>> x, Tuple<Cell, Tuple<int, int>> y)
-		//		{
-		//			if (distanceLeft(x.Item2) == distanceLeft(y.Item2)) return 0;
-		//			else if (distanceLeft(x.Item2) > distanceLeft(y.Item2)) return -1;
-		//			else return 1;
-		//		});
-		//		for (int i = paths.Count - 1; i >= 0; --i) {
-		//			Cell cur = paths[i].Item1;
-		//			if (getCell(paths[i].Item2) is EmptyCell) {
-		//				grid[cur.X, cur.Y] = new EmptyCell(cur.X, cur.Y);
-		//				cur.X = paths[i].Item2.Item1;
-		//				cur.Y = paths[i].Item2.Item2;
-		//				grid[cur.X, cur.Y] = cur;
-		//				paths.RemoveAt(i);
-		//			} else if (getCell(paths[i].Item2) is ExitCell) {
-		//				grid[cur.X, cur.Y] = new EmptyCell(cur.X, cur.Y);
-		//				paths.RemoveAt(i);
-		//				agentCells.Remove(cur);
-		//			}
-		//		}
-		//		if (paths.Count > 0) break;
-		//	}
-		//	*/
-		//}
+		public Tuple<int, int> AStarNext(Tuple<int, int> start, Tuple<int, int> end, List<Type> forbidTypes)
+		{
+			if (grid == null) return null;
+			var open = new List<AStarEntity>();
+			var close = new List<AStarEntity>();
+			var cur = new AStarEntity(start, null, 0, distanceLeft(start, end));
+			open.Add(cur);
+			var dict = new Dictionary<Tuple<int, int>, AStarEntity>();
+			dict[cur.cell] = cur;
+			Tuple<int, int> res = null;
+			while (open.Count > 0) {
+				cur = open[0];
+				open.RemoveAt(0);
+				if (cur.cell.Equals(end)) {
+					res = cur.cell;
+					while (!cur.cell.Equals(start)) {
+						res = cur.cell;
+						cur = dict[cur.parent];
+					}
+					break;
+				}
+				foreach (Tuple<int, int> neightbour in neightboursCross(cur.cell)) {
+					if (forbidTypes.Contains(getCell(neightbour).GetType())) {
+						continue;
+					}
+					int newg = cur.distFromStart + 1;
+					if (!dict.ContainsKey(neightbour)) {
+						dict[neightbour] = new AStarEntity();
+						dict[neightbour].cell = neightbour;
+					}
+					AStarEntity aneightb = dict[neightbour];
+					if ((open.Contains(aneightb) || close.Contains(aneightb)) &&
+							aneightb.distFromStart <= newg) {
+						continue;
+					}
+					if (!close.Contains(aneightb) || newg < aneightb.distFromStart) {
+						aneightb.parent = cur.cell;
+						aneightb.distFromStart = newg;
+						aneightb.approxLeft = distanceLeft(neightbour, end);
+						if (!open.Contains(aneightb)) {
+							open.Add(aneightb);
+							open.Sort(delegate (AStarEntity x, AStarEntity y)
+							{
+								if (x.cost() == y.cost()) return 0;
+								else if (x.cost() < y.cost()) return -1;
+								else return 1;
+							});
+						}
+					}
+				}
+				close.Add(cur);
+			}
+			return res;
+		}
 
-		//public Tuple<int, int> AStarNext(Tuple<int, int> start, List<Type> forbidTypes)
-		//{
-		//	if (grid == null) return null;
-		//	var open = new List<AStarEntity>();
-		//	var close = new List<AStarEntity>();
-		//	var cur = new AStarEntity(start, null, 0, distanceLeft(start));
-		//	open.Add(cur);
-		//	var dict = new Dictionary<Tuple<int, int>, AStarEntity>();
-		//	dict[cur.cell] = cur;
-		//	Tuple<int, int> res = null;
-		//	while (open.Count > 0) {
-		//		cur = open[0];
-		//		open.RemoveAt(0);
-		//		if (exitCells.Contains(getCell(cur.cell))) {
-		//			res = cur.cell;
-		//			while (cur.cell != start) {
-		//				res = cur.cell;
-		//				cur = dict[cur.parent];
-		//			}
-		//			break;
-		//		}
-		//		foreach (Tuple<int, int> neightbour in neightboursCross(cur.cell)) {
-		//			if (forbidTypes.Contains(getCell(neightbour).GetType())) {
-		//				continue;
-		//			}
-		//			int newg = cur.distFromStart + 1;
-		//			if (!dict.ContainsKey(neightbour)) {
-		//				dict[neightbour] = new AStarEntity();
-		//				dict[neightbour].cell = neightbour;
-		//			}
-		//			AStarEntity aneightb = dict[neightbour];
-		//			if ((open.Contains(aneightb) || close.Contains(aneightb)) &&
-		//					aneightb.distFromStart <= newg) {
-		//				continue;
-		//			}
-		//			if (!close.Contains(aneightb) || newg < aneightb.distFromStart) {
-		//				aneightb.parent = cur.cell;
-		//				aneightb.distFromStart = newg;
-		//				aneightb.approxLeft = distanceLeft(neightbour);
-		//				if (!open.Contains(aneightb)) {
-		//					open.Add(aneightb);
-		//					open.Sort(delegate (AStarEntity x, AStarEntity y)
-		//					{
-		//						if (x.cost() == y.cost()) return 0;
-		//						else if (x.cost() < y.cost()) return -1;
-		//						else return 1;
-		//					});
-		//				}
-		//			}
-		//		}
-		//		close.Add(cur);
-		//	}
-		//	return res;
-		//}
 		/*
 		public List<Cell> AStarPath(Cell start, List<Type> forbidTypes)
 		{

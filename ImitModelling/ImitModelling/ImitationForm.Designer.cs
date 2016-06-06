@@ -35,15 +35,19 @@
 			this.createToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.LoadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.FinishEditToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.масштабToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.увеличитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.уменьшитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.EditToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.DrawToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.WallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.SpawnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.ExitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.FinishEditToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.DemoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.StartDemoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.FastenDemoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.SlowDemoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.incSize = new System.Windows.Forms.Button();
 			this.decSize = new System.Windows.Forms.Button();
 			this.timerMove = new System.Windows.Forms.Timer(this.components);
@@ -79,7 +83,7 @@
             this.файлToolStripMenuItem,
             this.масштабToolStripMenuItem,
             this.EditToolStripMenuItem,
-            this.StartDemoToolStripMenuItem});
+            this.DemoToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Size = new System.Drawing.Size(501, 24);
@@ -91,8 +95,7 @@
 			this.файлToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.createToolStripMenuItem,
             this.saveToolStripMenuItem,
-            this.LoadToolStripMenuItem,
-            this.FinishEditToolStripMenuItem});
+            this.LoadToolStripMenuItem});
 			this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
 			this.файлToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
 			this.файлToolStripMenuItem.Text = "Файл";
@@ -100,30 +103,26 @@
 			// createToolStripMenuItem
 			// 
 			this.createToolStripMenuItem.Name = "createToolStripMenuItem";
-			this.createToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+			this.createToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+			this.createToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
 			this.createToolStripMenuItem.Text = "Создать";
 			this.createToolStripMenuItem.Click += new System.EventHandler(this.createToolStripMenuItem_Click);
 			// 
 			// saveToolStripMenuItem
 			// 
 			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-			this.saveToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+			this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+			this.saveToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
 			this.saveToolStripMenuItem.Text = "Сохранить";
 			this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
 			// 
 			// LoadToolStripMenuItem
 			// 
 			this.LoadToolStripMenuItem.Name = "LoadToolStripMenuItem";
-			this.LoadToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+			this.LoadToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.L)));
+			this.LoadToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
 			this.LoadToolStripMenuItem.Text = "Загрузить";
 			this.LoadToolStripMenuItem.Click += new System.EventHandler(this.LoadToolStripMenuItem_Click);
-			// 
-			// FinishEditToolStripMenuItem
-			// 
-			this.FinishEditToolStripMenuItem.Name = "FinishEditToolStripMenuItem";
-			this.FinishEditToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
-			this.FinishEditToolStripMenuItem.Text = "Закончить редактирование";
-			this.FinishEditToolStripMenuItem.Click += new System.EventHandler(this.FinishEditToolStripMenuItem_Click);
 			// 
 			// масштабToolStripMenuItem
 			// 
@@ -151,12 +150,21 @@
 			// EditToolStripMenuItem
 			// 
 			this.EditToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.WallToolStripMenuItem,
-            this.SpawnToolStripMenuItem,
-            this.ExitToolStripMenuItem});
+            this.DrawToolStripMenuItem,
+            this.FinishEditToolStripMenuItem});
 			this.EditToolStripMenuItem.Name = "EditToolStripMenuItem";
 			this.EditToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
 			this.EditToolStripMenuItem.Text = "Правка";
+			// 
+			// DrawToolStripMenuItem
+			// 
+			this.DrawToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.WallToolStripMenuItem,
+            this.SpawnToolStripMenuItem,
+            this.ExitToolStripMenuItem});
+			this.DrawToolStripMenuItem.Name = "DrawToolStripMenuItem";
+			this.DrawToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+			this.DrawToolStripMenuItem.Text = "Нарисовать";
 			// 
 			// WallToolStripMenuItem
 			// 
@@ -182,12 +190,46 @@
 			this.ExitToolStripMenuItem.Text = "Выход";
 			this.ExitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
 			// 
+			// FinishEditToolStripMenuItem
+			// 
+			this.FinishEditToolStripMenuItem.Name = "FinishEditToolStripMenuItem";
+			this.FinishEditToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+			this.FinishEditToolStripMenuItem.Text = "Настроить точки спауна";
+			this.FinishEditToolStripMenuItem.Click += new System.EventHandler(this.FinishEditToolStripMenuItem_Click);
+			// 
+			// DemoToolStripMenuItem
+			// 
+			this.DemoToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.StartDemoToolStripMenuItem,
+            this.FastenDemoToolStripMenuItem,
+            this.SlowDemoToolStripMenuItem});
+			this.DemoToolStripMenuItem.Name = "DemoToolStripMenuItem";
+			this.DemoToolStripMenuItem.Size = new System.Drawing.Size(100, 20);
+			this.DemoToolStripMenuItem.Text = "Демонстрация";
+			// 
 			// StartDemoToolStripMenuItem
 			// 
 			this.StartDemoToolStripMenuItem.Name = "StartDemoToolStripMenuItem";
-			this.StartDemoToolStripMenuItem.Size = new System.Drawing.Size(160, 20);
+			this.StartDemoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
+			this.StartDemoToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
 			this.StartDemoToolStripMenuItem.Text = "Запустить демонстрацию";
 			this.StartDemoToolStripMenuItem.Click += new System.EventHandler(this.StartDemoToolStripMenuItem_Click);
+			// 
+			// FastenDemoToolStripMenuItem
+			// 
+			this.FastenDemoToolStripMenuItem.Name = "FastenDemoToolStripMenuItem";
+			this.FastenDemoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
+			this.FastenDemoToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+			this.FastenDemoToolStripMenuItem.Text = "Ускорить демонстрацию";
+			this.FastenDemoToolStripMenuItem.Click += new System.EventHandler(this.SpeedUpDemoToolStripMenuItem_Click);
+			// 
+			// SlowDemoToolStripMenuItem
+			// 
+			this.SlowDemoToolStripMenuItem.Name = "SlowDemoToolStripMenuItem";
+			this.SlowDemoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
+			this.SlowDemoToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+			this.SlowDemoToolStripMenuItem.Text = "Замедлить демонстрацию";
+			this.SlowDemoToolStripMenuItem.Click += new System.EventHandler(this.SlowDemoToolStripMenuItem_Click);
 			// 
 			// incSize
 			// 
@@ -215,7 +257,6 @@
 			// 
 			// timerMove
 			// 
-			this.timerMove.Interval = 1;
 			this.timerMove.Tick += new System.EventHandler(this.timerMove_Tick);
 			// 
 			// openFileDialog1
@@ -240,7 +281,7 @@
 			this.totalAgentsUpDown.Enabled = false;
 			this.totalAgentsUpDown.Location = new System.Drawing.Point(165, 432);
 			this.totalAgentsUpDown.Maximum = new decimal(new int[] {
-            200,
+            1000,
             0,
             0,
             0});
@@ -303,13 +344,17 @@
 		private System.Windows.Forms.OpenFileDialog openFileDialog1;
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.ToolStripMenuItem EditToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem WallToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem SpawnToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem ExitToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem FinishEditToolStripMenuItem;
 		private System.Windows.Forms.NumericUpDown totalAgentsUpDown;
 		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.ToolStripMenuItem DrawToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem SpawnToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem WallToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem ExitToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem FinishEditToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem DemoToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem StartDemoToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem FastenDemoToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem SlowDemoToolStripMenuItem;
 	}
 }
 

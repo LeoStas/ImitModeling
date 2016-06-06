@@ -53,6 +53,20 @@ namespace ImitModelling
 	{
 		private AgentCell agent;
 		private List<Tuple<int, int>> checkpoints;
+		private Tuple<int, int> lastMove;
+		public bool surrounded = false;
+		public int attempts = 0;
+		public Tuple<int, int> LastMove
+		{
+			get
+			{
+				return lastMove;
+			}
+			set
+			{
+				lastMove = value;
+			}
+		}
 		public List<Tuple<int, int>> CheckPoints
 		{
 			get
@@ -88,6 +102,18 @@ namespace ImitModelling
 	}
 	public class TickEvent : Event
 	{
+		private int ticks = 0;
+		public int Ticks
+		{
+			get
+			{
+				return ticks;
+			}
+			set
+			{
+				ticks = value;
+			}
+		}
 		public override void execute(EventExecutor executor)
 		{
 			executor.execute(this);
@@ -111,22 +137,25 @@ namespace ImitModelling
 
 		public void execute(TickEvent ev)
 		{
-			form.reDraw();
-			form.AddEvent(ev);
+			ev.Ticks++;
 		}
 
 		public void execute(AgentMoveEvent ev)
 		{
 			List<Tuple<int, int>> neighbours = grid.neightboursCross(new Tuple<int, int>(ev.Agent.X, ev.Agent.Y));
 			Dictionary<Tuple<int, int>, int> dict = new Dictionary<Tuple<int, int>, int>();
+			Tuple<int, int> goal = null;
 			foreach (var neighbour in neighbours) {
 				if (ev.CheckPoints.Count > 0) {
 					dict[neighbour] = Distance(neighbour, ev.CheckPoints[0]);
+					goal = ev.CheckPoints[0];
 				} else {
 					int minDistance = -1;
 					foreach (var exit in grid.exitCells) {
-						minDistance = minDistance == -1 ? Distance(neighbour, new Tuple<int, int>(exit.X, exit.Y)) :
-								Math.Min(minDistance, Distance(neighbour, new Tuple<int, int>(exit.X, exit.Y)));
+						if (minDistance == -1 || minDistance >= Distance(neighbour, new Tuple<int, int>(exit.X, exit.Y))) {
+							minDistance = Distance(neighbour, new Tuple<int, int>(exit.X, exit.Y));
+							goal = new Tuple<int, int>(exit.X, exit.Y);
+						}
 					}
 					dict[neighbour] = minDistance;
 				}
@@ -138,20 +167,56 @@ namespace ImitModelling
 					return pair1.Value.CompareTo(pair2.Value);
 				}
 			);
-			for (int i = 0; i < distances.Count && distances[i].Value == distances[0].Value; ++i) {
-				if (grid.getCell(distances[i].Key) is NotOccupiedCell) {
+			bool isWall = true;
+			bool moveMade = false;
+			for (int i = 0; i < distances.Count && !ev.surrounded && distances[i].Value == distances[0].Value; ++i) {
+				var nextCell = grid.getCell(distances[i].Key);
+				if (!(nextCell is WallCell) && 
+						!(ev.LastMove != null && 
+							nextCell.X == ev.LastMove.Item1 && nextCell.Y == ev.LastMove.Item2)) {
+					isWall = false;
+				}
+				if (nextCell is NotOccupiedCell) {
 					grid.setCell(ev.Agent.X, ev.Agent.Y, new EmptyCell(ev.Agent.X, ev.Agent.Y));
-					if (!(grid.getCell(distances[i].Key) is ExitCell)) {
-						ev.Agent.X = distances[i].Key.Item1;
-						ev.Agent.Y = distances[i].Key.Item2;
+					if (!(nextCell is ExitCell)) {
+						ev.LastMove = new Tuple<int, int>(ev.Agent.X, ev.Agent.Y);
+						ev.Agent.X = nextCell.X;
+						ev.Agent.Y = nextCell.Y;
 						grid.setCell(distances[i].Key, ev.Agent);
 					} else {
 						grid.agentCells.Remove(ev.Agent);
 						return;
 					}
+					ev.attempts = 0;
+					moveMade = true;
 					break;
 				}
+			}/*
+			if (!moveMade && !isWall) {
+				ev.attempts++;
+			}*/
+			if (isWall || ev.attempts > 100) {
+				ev.surrounded = true;
+				var forbid = new List<Type>();
+				forbid.Add(typeof(WallCell));
+				var coords = grid.AStarNext(new Tuple<int, int>(ev.Agent.X, ev.Agent.Y), goal, forbid);
+				if (coords != null) {
+					var cur = grid.getCell(coords);
+					if (cur is NotOccupiedCell) {
+						grid.setCell(ev.Agent.X, ev.Agent.Y, new EmptyCell(ev.Agent.X, ev.Agent.Y));
+						if (!(cur is ExitCell)) {
+							ev.LastMove = new Tuple<int, int>(ev.Agent.X, ev.Agent.Y);
+							ev.Agent.X = cur.X;
+							ev.Agent.Y = cur.Y;
+							grid.setCell(cur.X, cur.Y, ev.Agent);
+						} else {
+							grid.agentCells.Remove(ev.Agent);
+							return;
+						}
+					}
+				}
 			}
+			
 			if (ev.CheckPoints.Count > 0 && Distance(new Tuple<int, int>(ev.Agent.X, ev.Agent.Y), ev.CheckPoints[0]) <= 2) {
 				ev.CheckPoints.RemoveAt(0);
 			}
