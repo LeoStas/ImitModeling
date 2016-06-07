@@ -10,6 +10,7 @@ namespace ImitModelling
 	public class Grid
 	{
 		private Cell[,] grid;
+		private int[,] weights;
 		public List<SpawnCell> spawnCells;
 		public List<AgentCell> agentCells;
 		public List<ExitCell> exitCells;
@@ -21,6 +22,42 @@ namespace ImitModelling
 			exitCells = new List<ExitCell>();
 			grid = null;
 			savedSpawn = null;
+		}
+
+		public int Weight(Tuple<int, int> coord)
+		{
+			if (weights != null) {
+				return weights[coord.Item2, coord.Item1];
+			}
+			weights = new int[Height(), Width()];
+			for (int i = 0; i < Height(); ++i) {
+				for (int j = 0; j < Width(); ++j) {
+					weights[i, j] = -1;
+				}
+			}
+			List<Tuple<int, int>> open = new List<Tuple<int, int>>();
+			foreach (ExitCell exit in exitCells) {
+				weights[exit.Y, exit.X] = 0;
+				open.Add(new Tuple<int, int>(exit.X, exit.Y));
+			}
+			while (open.Count > 0) {
+				Tuple<int, int> cur = open[0];
+				open.RemoveAt(0);
+				int curWeight = weights[cur.Item2, cur.Item1];
+				foreach (var neightbour in neightboursCross(cur)) {
+					if (getCell(neightbour) is WallCell) {
+						continue;
+					}
+					int prevWeight = weights[neightbour.Item2, neightbour.Item1];
+					if (prevWeight == -1 || prevWeight > curWeight + 1) {
+						weights[neightbour.Item2, neightbour.Item1] = curWeight + 1;
+						if (!open.Contains(neightbour)) {
+							open.Add(neightbour);
+						}
+					}
+				}
+			}
+			return weights[coord.Item2, coord.Item1];
 		}
 
 		public int Width()
@@ -146,11 +183,17 @@ namespace ImitModelling
 				}
 			}
 			if (cell is SpawnCell) {
-				spawnCells.Add(cell as SpawnCell);
+				if (!spawnCells.Contains(cell as SpawnCell)) {
+					spawnCells.Add(cell as SpawnCell);
+				}
 			} else if (cell is ExitCell) {
-				exitCells.Add(cell as ExitCell);
+				if (!exitCells.Contains(cell as ExitCell)) {
+					exitCells.Add(cell as ExitCell);
+				}
 			} else if (cell is AgentCell) {
-				agentCells.Add(cell as AgentCell);
+				if (!agentCells.Contains(cell as AgentCell)) {
+					agentCells.Add(cell as AgentCell);
+				}
 			}
 			return true;
 		}

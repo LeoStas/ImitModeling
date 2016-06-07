@@ -101,12 +101,13 @@ namespace ImitModelling
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
-			Painter cptr;
+			Painter cptr = new CreatePainter(xOffset(), yOffset(), e.Graphics, prj.grid);
+			/*
 			if (painter == typeof(CreatePainter)) {
 				cptr = new CreatePainter(xOffset(), yOffset(), e.Graphics, prj.grid);
 			} else {
 				cptr = new WorkPainter(xOffset(), yOffset(), e.Graphics, prj.grid);
-			}
+			}*/
 			prj.grid.Draw(cptr);
 			Size size = new Size(prj.grid.Width() * Cell.r, prj.grid.Height() * Cell.r);
 			panel1.AutoScrollMinSize = size;
