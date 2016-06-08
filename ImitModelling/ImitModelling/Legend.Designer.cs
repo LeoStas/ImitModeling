@@ -36,6 +36,9 @@
 			// 
 			// SpawnLabel
 			// 
+			this.SpawnLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.SpawnLabel.AutoSize = true;
 			this.SpawnLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.SpawnLabel.ForeColor = System.Drawing.Color.Blue;
@@ -47,6 +50,9 @@
 			// 
 			// ExitLabel
 			// 
+			this.ExitLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.ExitLabel.AutoSize = true;
 			this.ExitLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.ExitLabel.ForeColor = System.Drawing.Color.Orange;
@@ -58,6 +64,9 @@
 			// 
 			// AgentLabel
 			// 
+			this.AgentLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.AgentLabel.AutoSize = true;
 			this.AgentLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.AgentLabel.ForeColor = System.Drawing.Color.Green;
@@ -69,6 +78,9 @@
 			// 
 			// WallLabel
 			// 
+			this.WallLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.WallLabel.AutoSize = true;
 			this.WallLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.WallLabel.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
@@ -80,6 +92,9 @@
 			// 
 			// CheckpointLabel
 			// 
+			this.CheckpointLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.CheckpointLabel.AutoSize = true;
 			this.CheckpointLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.CheckpointLabel.ForeColor = System.Drawing.Color.Red;
@@ -93,14 +108,20 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoSize = true;
+			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.ClientSize = new System.Drawing.Size(120, 128);
 			this.Controls.Add(this.CheckpointLabel);
 			this.Controls.Add(this.WallLabel);
 			this.Controls.Add(this.AgentLabel);
 			this.Controls.Add(this.ExitLabel);
 			this.Controls.Add(this.SpawnLabel);
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
 			this.Name = "Legend";
-			this.Text = "Legend";
+			this.ShowIcon = false;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+			this.Text = "Легенда";
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

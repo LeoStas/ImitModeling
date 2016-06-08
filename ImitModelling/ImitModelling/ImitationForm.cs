@@ -39,9 +39,33 @@ namespace ImitModelling
 			this.pictureBox.Hide();
 		}
 
+		public void PreAddEvent(AgentMoveEvent ev)
+		{
+			int i, j;
+			for (i = events.Count - 1; i >= 0 && !(events[i] is TickEvent); --i) {}
+			for (j = i - 1; j >= 0; --j) {
+				if (events[j] is AgentMoveEvent && (events[j] as AgentMoveEvent).weight <= ev.weight) {
+					break;
+				}
+			}
+			events.Insert(j + 1, ev);
+		}
+
 		public void AddEvent(Event ev)
 		{
-			events.Add(ev);
+			if (!(ev is AgentMoveEvent)) {
+				events.Add(ev);
+				return;
+			}
+			int i;
+			AgentMoveEvent aev = ev as AgentMoveEvent;
+			for (i = events.Count - 1; i >= 0; --i) {
+				if (events[i] is TickEvent) break;
+				if (events[i] is AgentMoveEvent && (events[i] as AgentMoveEvent).weight <= aev.weight) {
+					break;
+				}
+			}
+			events.Insert(i + 1, ev);
 		}
 
 		public void SaveState(string filename)

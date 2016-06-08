@@ -56,6 +56,7 @@ namespace ImitModelling
 		private List<Tuple<int, int>> visited;
 		public bool surrounded = false;
 		public int attempts = 0;
+		public int weight;
 		public List<Tuple<int, int>> Visited
 		{
 			get
@@ -196,6 +197,7 @@ namespace ImitModelling
 					grid.setCell(ev.Agent.X, ev.Agent.Y, new EmptyCell(ev.Agent.X, ev.Agent.Y));
 					if (!(nextCell is ExitCell)) {
 						ev.Visited[0] = (new Tuple<int, int>(ev.Agent.X, ev.Agent.Y));
+						ev.weight = grid.Weight(distances[i].Key);
 						ev.Agent.X = nextCell.X;
 						ev.Agent.Y = nextCell.Y;
 						grid.setCell(distances[i].Key, ev.Agent);
@@ -208,8 +210,10 @@ namespace ImitModelling
 					break;
 				}
 			}
-			if (!moveMade) {
-				ev.attempts++;
+			if (!moveMade && ev.attempts == 0) {
+				ev.attempts = 1;
+				form.PreAddEvent(ev);
+				return;
 			}
 			/*Dictionary<Tuple<int, int>, Tuple<int, double>> dict = new Dictionary<Tuple<int, int>, Tuple<int, double>>();
 			Tuple<int, int> goal = null;
@@ -290,10 +294,10 @@ namespace ImitModelling
 				}
 			}
 			*/
-
+			/*
 			if (ev.CheckPoints.Count > 0 && Distance(new Tuple<int, int>(ev.Agent.X, ev.Agent.Y), ev.CheckPoints[0]) <= 2) {
 				ev.CheckPoints.RemoveAt(0);
-			}
+			}*/
 			form.AddEvent(ev);
 		}
 		public void execute(GenerateAgentsEvent ev)
@@ -304,7 +308,9 @@ namespace ImitModelling
 				if (grid.getCell(neighbour) is NotOccupiedCell) {
 					AgentCell agent = new AgentCell(neighbour.Item1, neighbour.Item2);
 					grid.setCell(neighbour.Item1, neighbour.Item2, agent);
-					form.AddEvent(new AgentMoveEvent(agent, ev.Spawn.checkPoints));
+					AgentMoveEvent aev = new AgentMoveEvent(agent, ev.Spawn.checkPoints);
+					aev.weight = grid.Weight(new Tuple<int, int>(aev.Agent.X, aev.Agent.Y));
+					form.AddEvent(aev);
 					ev.EstimateAgents--;
 				}
 			}
