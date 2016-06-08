@@ -71,6 +71,12 @@
       <DependentUpon>ImitationForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Grid.cs" />
+    <Compile Include="Legend.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Legend.Designer.cs">
+      <DependentUpon>Legend.cs</DependentUpon>
+    </Compile>
     <Compile Include="Painters.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProgramState.cs" />
@@ -83,6 +89,9 @@
     </Compile>
     <EmbeddedResource Include="ImitationForm.resx">
       <DependentUpon>ImitationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Legend.resx">
+      <DependentUpon>Legend.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

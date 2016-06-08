@@ -31,7 +31,7 @@
 			this.components = new System.ComponentModel.Container();
 			this.pictureBox = new System.Windows.Forms.PictureBox();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-			this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.FileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.createToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.LoadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -48,6 +48,8 @@
 			this.StartDemoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.FastenDemoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.SlowDemoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.HelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.LegendToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.incSize = new System.Windows.Forms.Button();
 			this.decSize = new System.Windows.Forms.Button();
 			this.timerMove = new System.Windows.Forms.Timer(this.components);
@@ -80,25 +82,26 @@
 			// menuStrip1
 			// 
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.файлToolStripMenuItem,
+            this.FileToolStripMenuItem,
             this.масштабToolStripMenuItem,
             this.EditToolStripMenuItem,
-            this.DemoToolStripMenuItem});
+            this.DemoToolStripMenuItem,
+            this.HelpToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Size = new System.Drawing.Size(501, 24);
 			this.menuStrip1.TabIndex = 1;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
-			// файлToolStripMenuItem
+			// FileToolStripMenuItem
 			// 
-			this.файлToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.FileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.createToolStripMenuItem,
             this.saveToolStripMenuItem,
             this.LoadToolStripMenuItem});
-			this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
-			this.файлToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
-			this.файлToolStripMenuItem.Text = "Файл";
+			this.FileToolStripMenuItem.Name = "FileToolStripMenuItem";
+			this.FileToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+			this.FileToolStripMenuItem.Text = "Файл";
 			// 
 			// createToolStripMenuItem
 			// 
@@ -152,6 +155,7 @@
 			this.EditToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.DrawToolStripMenuItem,
             this.FinishEditToolStripMenuItem});
+			this.EditToolStripMenuItem.Enabled = false;
 			this.EditToolStripMenuItem.Name = "EditToolStripMenuItem";
 			this.EditToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
 			this.EditToolStripMenuItem.Text = "Правка";
@@ -203,6 +207,7 @@
             this.StartDemoToolStripMenuItem,
             this.FastenDemoToolStripMenuItem,
             this.SlowDemoToolStripMenuItem});
+			this.DemoToolStripMenuItem.Enabled = false;
 			this.DemoToolStripMenuItem.Name = "DemoToolStripMenuItem";
 			this.DemoToolStripMenuItem.Size = new System.Drawing.Size(100, 20);
 			this.DemoToolStripMenuItem.Text = "Демонстрация";
@@ -230,6 +235,21 @@
 			this.SlowDemoToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
 			this.SlowDemoToolStripMenuItem.Text = "Замедлить демонстрацию";
 			this.SlowDemoToolStripMenuItem.Click += new System.EventHandler(this.SlowDemoToolStripMenuItem_Click);
+			// 
+			// HelpToolStripMenuItem
+			// 
+			this.HelpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.LegendToolStripMenuItem});
+			this.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem";
+			this.HelpToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
+			this.HelpToolStripMenuItem.Text = "Справка";
+			// 
+			// LegendToolStripMenuItem
+			// 
+			this.LegendToolStripMenuItem.Name = "LegendToolStripMenuItem";
+			this.LegendToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
+			this.LegendToolStripMenuItem.Text = "Легенда";
+			this.LegendToolStripMenuItem.Click += new System.EventHandler(this.LegendToolStripMenuItem_Click);
 			// 
 			// incSize
 			// 
@@ -330,7 +350,7 @@
 
         private System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem файлToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem FileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem LoadToolStripMenuItem;
 		private System.Windows.Forms.Button incSize;
 		private System.Windows.Forms.Button decSize;
@@ -355,6 +375,8 @@
 		private System.Windows.Forms.ToolStripMenuItem StartDemoToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem FastenDemoToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem SlowDemoToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem HelpToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem LegendToolStripMenuItem;
 	}
 }
 

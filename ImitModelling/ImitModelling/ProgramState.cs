@@ -8,6 +8,8 @@ namespace ImitModelling
 	{
 		public enum MenuItemsNames
 		{
+			DemoItemName,
+			EditItemName,
 			WallItemName,
 			SpawnItemName,
 			ExitItemName,
@@ -47,6 +49,8 @@ namespace ImitModelling
 		public override void Reload(ImitationForm form)
 		{
 			MenuStates = new bool[(int)MenuItemsNames.Size];
+			MenuStates[(int)MenuItemsNames.DemoItemName] = false;
+			MenuStates[(int)MenuItemsNames.EditItemName] = true;
 			MenuStates[(int)MenuItemsNames.WallItemName] = true;
 			MenuStates[(int)MenuItemsNames.SpawnItemName] = true;
 			MenuStates[(int)MenuItemsNames.ExitItemName] = true;
@@ -67,6 +71,8 @@ namespace ImitModelling
 		public override void Reload(ImitationForm form)
 		{
 			MenuStates = new bool[(int)MenuItemsNames.Size];
+			MenuStates[(int)MenuItemsNames.DemoItemName] = true;
+			MenuStates[(int)MenuItemsNames.EditItemName] = false;
 			MenuStates[(int)MenuItemsNames.WallItemName] = false;
 			MenuStates[(int)MenuItemsNames.SpawnItemName] = false;
 			MenuStates[(int)MenuItemsNames.ExitItemName] = false;
@@ -88,6 +94,8 @@ namespace ImitModelling
 		public override void Reload(ImitationForm form)
 		{
 			MenuStates = new bool[(int)MenuItemsNames.Size];
+			MenuStates[(int)MenuItemsNames.DemoItemName] = true;
+			MenuStates[(int)MenuItemsNames.EditItemName] = false;
 			MenuStates[(int)MenuItemsNames.WallItemName] = false;
 			MenuStates[(int)MenuItemsNames.SpawnItemName] = false;
 			MenuStates[(int)MenuItemsNames.ExitItemName] = false;

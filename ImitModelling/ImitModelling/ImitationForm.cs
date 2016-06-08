@@ -17,24 +17,23 @@ namespace ImitModelling
 			public ProgramState state;
 			public int TotalEstimate;
 			public int TotalAgents;
+			public Type painter;
 		}
 		private CellFactory factory;
-		private Type painter;
 		private bool isDown;
 		private Project prj;
-		List<Event> events;
-		Thread thread;
+		private List<Event> events;
+		private Thread thread;
 
         public ImitationForm()
         {
 			prj = new Project();
-            prj.grid = new Grid();
-			prj.state = new ProgramState();
 			events = new List<Event>();
+			prj.state = new ProgramState();
 			prj.state.LoadState(this);
 			isDown = false;
 			factory = new EmptyFactory();
-			painter = typeof(CreatePainter);
+			prj.painter = typeof(CreatePainter);
 			prj.TotalEstimate = 100;
             InitializeComponent();
 			this.pictureBox.Hide();
@@ -70,23 +69,16 @@ namespace ImitModelling
 			if (this.openFileDialog1.ShowDialog() == DialogResult.OK) {
 				LoadState(this.openFileDialog1.FileName);
 				prj.state.LoadState(this);
+				factory = new EmptyFactory();
+				isDown = false;
+				List<Event> events = new List<Event>();
+				if (thread != null) {
+					thread.Abort();
+					thread = null;
+				}
 				this.pictureBox.Show();
 				this.pictureBox.Invalidate();
 			}
-			/*
-            OpenFileDialog ofd = new OpenFileDialog();
-            if (ofd.ShowDialog() != DialogResult.OK)
-            {
-                return;
-            }
-			string fileName;
-			this.pictureBox1.Show();
-			fileName = ofd.FileName;
-            prj.grid.LoadRoom(fileName);
-			thread = new Thread(prj.grid.fillFull);
-			*/
-			//thread.Start();
-			//this.pictureBox.Invalidate();
         }
 
 		private int xOffset()
@@ -101,13 +93,12 @@ namespace ImitModelling
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
-			Painter cptr = new CreatePainter(xOffset(), yOffset(), e.Graphics, prj.grid);
-			/*
-			if (painter == typeof(CreatePainter)) {
+			Painter cptr;
+			if (prj.painter == typeof(CreatePainter)) {
 				cptr = new CreatePainter(xOffset(), yOffset(), e.Graphics, prj.grid);
 			} else {
 				cptr = new WorkPainter(xOffset(), yOffset(), e.Graphics, prj.grid);
-			}*/
+			}
 			prj.grid.Draw(cptr);
 			Size size = new Size(prj.grid.Width() * Cell.r, prj.grid.Height() * Cell.r);
 			panel1.AutoScrollMinSize = size;
@@ -157,12 +148,20 @@ namespace ImitModelling
 				events.RemoveAt(0);
 				string str = "Эвакуация проведена за " + ev.Ticks + " тактов";
 				MessageBox.Show(this, str, "Результат", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+				thread = null;
+				this.FileToolStripMenuItem.Enabled = true;
 			}
 		}
 
 		private void createToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			this.pictureBox.Show();
+			prj = new Project();
+			events = new List<Event>();
+			isDown = false;
+			factory = new EmptyFactory();
+			prj.painter = typeof(CreatePainter);
+			prj.TotalEstimate = 100;
 			prj.grid = new Grid();
 			prj.grid.createEmptyGrid(this.panel1.Height / Cell.r, this.panel1.Width / Cell.r);
 			prj.state = new EditAllCellsState(this);
@@ -173,10 +172,13 @@ namespace ImitModelling
 		public void LoadMenuEdit(bool [] enabled)
 		{
 			if (enabled == null) return;
-			int i = 0;
+			this.DemoToolStripMenuItem.Enabled = enabled[(int)ProgramState.MenuItemsNames.DemoItemName];
+			this.EditToolStripMenuItem.Enabled = enabled[(int)ProgramState.MenuItemsNames.EditItemName];
+			int i = (int)ProgramState.MenuItemsNames.WallItemName;
 			foreach (ToolStripMenuItem tsmi in this.DrawToolStripMenuItem.DropDownItems) {
 				tsmi.Checked = false;
 				tsmi.Enabled = enabled[i];
+				i++;
 			}
 		}
 
@@ -384,22 +386,18 @@ namespace ImitModelling
 
 		private void StartDemoToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (prj.TotalAgents <= 0) {
+			if (prj.TotalAgents <= 0 || thread != null) {
 				return;
 			}
+			this.FileToolStripMenuItem.Enabled = false;
 			foreach (var spawn in prj.grid.spawnCells) {
 				events.Add(new GenerateAgentsEvent(spawn, (int)Math.Round(spawn.Distribution * prj.TotalAgents)));
 			}
 			AddEvent(new TickEvent());
 			EventExecutor evexec = new EventExecutor(prj.grid, this);
-			/*while (events.Count > 0) {
-				Event ev = events[0];
-				events.RemoveAt(0);
-				ev.execute(evexec);
-			}*/
 			prj.state = new WorkingState(this);
 			prj.state.LoadState(this);
-			painter = typeof(WorkPainter);
+			prj.painter = typeof(WorkPainter);
 			thread = new Thread(Cycle);
 			this.timerMove.Start();
 			thread.Start();
@@ -437,6 +435,12 @@ namespace ImitModelling
 		private void SpeedUpDemoToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			timerMove.Interval /= timerMove.Interval >= 5 ? 5 : 1;
+		}
+
+		private void LegendToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Legend leg = new Legend();
+			leg.ShowDialog(this);
 		}
 	}
 	public class DistribEventArgs : EventArgs
