@@ -84,6 +84,7 @@ namespace ImitModelling
 			prj = (Project)bf.Deserialize(fs);
 			prj.state.Reload(this);
 			prj.state.LoadState(this);
+			this.totalAgentsUpDown.Value = prj.TotalAgents;
 			Cell.r = (int)bf.Deserialize(fs);
 			fs.Close();
 		}
